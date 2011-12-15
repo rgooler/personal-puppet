@@ -3,5 +3,5 @@ class base{
 }
 
 node nas{
-  include base
+  include base,users::friends
 }
