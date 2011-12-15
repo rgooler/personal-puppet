@@ -1,3 +1,7 @@
-class base{}
+class base{
+  include users
+}
 
-node nas{}
+node nas{
+  include base
+}
