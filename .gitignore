@@ -1,1 +1,5 @@
+#I might edit this on a mac sometimes
+.DS_Store
+
+#Ignore files containing secrets
 secret.pp
