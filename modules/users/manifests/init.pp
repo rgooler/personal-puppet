@@ -8,7 +8,7 @@ class users{
     managehome => true,
     shell      => '/bin/bash',
     uid        => 1000,
-#    password   => $jippen_pass_hash,
+#    password   => $users::secret::jippen,
   }
 
 
