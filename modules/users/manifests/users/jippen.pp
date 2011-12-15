@@ -12,4 +12,13 @@ class users::users::jippen{
     password   => $users::secret::jippen,
   }
 
+  file {'/home/jippen':
+    ensure  => directory,
+    mode    => 0700,
+    owner   => 'jippen',
+    group   => 'wheel',
+    require => User['jippen'],
+    recurse => false,
+  }
+
 }
