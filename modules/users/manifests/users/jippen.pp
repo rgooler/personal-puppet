@@ -9,4 +9,12 @@ class users::users::jippen{
     pass     => $users::secret::jippen,
   }
 
+  file {'/home/jippen/.ssh/':
+    owner => 'jippen',
+    group => 'wheel',
+    mode => 0600,
+    recurse => true,
+    require => User_acct['jippen'],
+    source => 'puppet:///modules/users/jippen/.ssh',
+  }
 }
