@@ -3,3 +3,7 @@
 
 #Ignore files containing secrets
 secret.pp
+
+#Ignore temp files
+*~
+*.swp
