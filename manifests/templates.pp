@@ -1,7 +1,7 @@
 class base{
-  include users
+  include vim
 }
 
 node nas{
-  include base,users::friends,samba
+  include base,samba
 }
