@@ -4,4 +4,5 @@ class base{
 
 node nas{
   include base,samba
+  include rtorrent
 }
