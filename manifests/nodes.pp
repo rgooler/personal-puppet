@@ -1,1 +1,3 @@
-node 'openmediavault.goolertech.com' inherits nas{}
+node 'openmediavault.goolertech.com' inherits nas{
+  include 'ejabberd'
+}
