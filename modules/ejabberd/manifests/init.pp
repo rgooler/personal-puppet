@@ -1,7 +1,7 @@
 class ejabberd {
-  $packagelist = ['ejabberd', 'erlang', 'erlang-tools']
 
-  package { $packagelist:
-    ensure => present,
-  }
+  include 'ejabberd::install'
+  include 'ejabberd::configuration'
+
+  Class['ejabberd::install'] -> Class['ejabberd::configuration']
 }
