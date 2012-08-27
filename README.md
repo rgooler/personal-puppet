@@ -8,4 +8,5 @@ Quick Setup
 For super-fast setup, run this:
 
     wget "http://bit.ly/SHfDsw" -O update_puppet.sh
+    sudo rm -rf /etc/puppet
     sudo bash update_puppet.sh
