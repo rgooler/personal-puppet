@@ -1,6 +1,6 @@
 node default {
   include 'users::users::jippen'
-  include 'puppet::scripts'
+  include 'puppet'
 }
 
 node /^tvmobili.*/ inherits default {
