@@ -4,7 +4,6 @@ class users::users::jippen{
   #My non-root account I use everywhere
   user_acct {'jippen':
     fullname => "Jippen Faddoul",
-    group    => 'jippen',
     uid      => 1000,
   }
 

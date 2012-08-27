@@ -1,12 +1,17 @@
-define user_acct($fullname, $group, $uid, $pass='!!',$groups=[]){
+define user_acct($fullname, $uid, $groups=[]){
+  group { $name:
+    ensure => present,
+    gid    => $uid,
+  }
+  
   user { $name:
     ensure     => present,
-    gid        => $group,
+    gid        => $name,
     home       => "/home/${name}",
     managehome => true,
     shell      => '/bin/bash',
     uid        => $uid,
-    password   => $pass,
+    require    => Group[$name],
   }
 
   file { "/home/${name}":
