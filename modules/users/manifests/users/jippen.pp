@@ -4,13 +4,13 @@ class users::users::jippen{
   #My non-root account I use everywhere
   user_acct {'jippen':
     fullname => "Jippen Faddoul",
-    group    => 'wheel',
+    group    => 'jippen',
     uid      => 1000,
   }
 
   file {'/home/jippen/.ssh/':
     owner   => 'jippen',
-    group   => 'wheel',
+    group   => 'jippen',
     mode    => 0600,
     recurse => true,
     require => User_acct['jippen'],
@@ -19,7 +19,7 @@ class users::users::jippen{
 
   file { '/home/jippen/.bashrc':
     owner   => 'jippen',
-    group   => 'wheel',
+    group   => 'jippen',
     mode    => 0600,
     require => User_acct['jippen'],
     source  => 'puppet:///modules/users/jippen/.bashrc'
@@ -27,7 +27,7 @@ class users::users::jippen{
 
   file { '/home/jippen/.inputrc':
     owner   => 'jippen',
-    group   => 'wheel',
+    group   => 'jippen',
     mode    => 0600,
     require => User_acct['jippen'],
     source  => 'puppet:///modules/users/jippen/.inputrc'
@@ -35,7 +35,7 @@ class users::users::jippen{
 
   file { '/home/jippen/.vim':
     owner   => 'jippen',
-    group   => 'wheel',
+    group   => 'jippen',
     ensure  => directory,
     mode    => 0600,
     require => User_acct['jippen'],
@@ -47,7 +47,7 @@ class users::users::jippen{
     ensure => link,
     target => '/home/jippen/.vim/.vimrc',
     owner   => 'jippen',
-    group   => 'wheel',
+    group   => 'jippen',
     require => [ User_acct['jippen'], File['/home/jippen/.vim'] ],
   }
 
