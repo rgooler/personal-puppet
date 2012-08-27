@@ -6,5 +6,6 @@ Quick Setup
 ===========
 
 For super-fast setup, run this:
-    wget "https://raw.github.com/jippen/personal-puppet/master/modules/puppet/files/usr/local/sbin/update_puppet.sh" -O update_puppet.sh
+
+    wget "http://bit.ly/SHfDsw" -O update_puppet.sh
     sudo bash update_puppet.sh
