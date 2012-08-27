@@ -19,7 +19,7 @@ fi
 cd /etc/puppet
 
 #Nuke local changes
-git stash
+git stash -q
 
 #Update repo
 git pull -q
