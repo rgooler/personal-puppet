@@ -3,6 +3,6 @@ node default {
   include 'puppet::scripts'
 }
 
-node /^tvmobili/ inherits default {
+node /^tvmobili.*/ inherits default {
   include 'tvmobili'
 }
