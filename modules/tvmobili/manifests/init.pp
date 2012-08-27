@@ -1,1 +1,5 @@
-class tvmobili {}
+class tvmobili {
+
+  include 'tvmobili::users'
+
+}

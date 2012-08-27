@@ -1,5 +1,3 @@
-include 'users::secret'
-
 define user_acct($fullname, $group, $uid, $pass='!!',$groups=[]){
   user { $name:
     ensure     => present,
@@ -11,7 +9,7 @@ define user_acct($fullname, $group, $uid, $pass='!!',$groups=[]){
     password   => $pass,
   }
 
-  file { "/home/$name":
+  file { "/home/${name}":
     ensure  => directory,
     mode    => 0700,
     owner   => $name,
@@ -23,4 +21,3 @@ define user_acct($fullname, $group, $uid, $pass='!!',$groups=[]){
 
 
 class users::util{}
-
