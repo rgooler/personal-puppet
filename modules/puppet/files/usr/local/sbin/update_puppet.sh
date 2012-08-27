@@ -13,7 +13,7 @@ command -v puppet >/dev/null 2>&1 || { echo "I require puppet but it's not insta
 #If the puppet dir does not exist, clone it
 if [ ! -d "/etc/puppet" ]; then
     cd /etc
-    git clone git@github.com:jippen/personal-puppet puppet
+    git clone https://github.com/jippen/personal-puppet.git /etc/puppet
 fi
 
 cd /etc/puppet
