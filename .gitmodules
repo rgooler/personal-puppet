@@ -1,0 +1,3 @@
+[submodule "modules/users/files/jippen/.vim"]
+	path = modules/users/files/jippen/.vim
+	url = git@github.com:jippen/.vim
