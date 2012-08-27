@@ -6,8 +6,9 @@ if [[ $EUID -ne 0 ]]; then
     exit 1
 fi
 
-#Abort if no git
+#Abort if no git/puppet
 command -v git >/dev/null 2>&1 || { echo "I require git but it's not installed. Please install git-core if on debian/ubuntu" >&2; exit 1; }
+command -v puppet >/dev/null 2>&1 || { echo "I require puppet but it's not installed. Please install puppet if on debian/ubuntu" >&2; exit 1; }
 
 #If the puppet dir does not exist, clone it
 if [ ! -d "/etc/puppet" ]; then
