@@ -1,5 +1,5 @@
-class base {
+class common {
 
-  include 'base::defines'
+  include 'common::defines'
 
 }
