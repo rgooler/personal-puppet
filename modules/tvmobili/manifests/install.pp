@@ -9,4 +9,9 @@ class tvmobili::install {
     require => Download['tvmobili-all-universal.deb'],
   }
 
+  package { 'vlc-nox':
+    ensure => present,
+    notify => Class['tvmobili::service'],
+  }
+
 }
