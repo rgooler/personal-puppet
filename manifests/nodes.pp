@@ -2,6 +2,7 @@ node default {
   include 'common'
   include 'users::users::jippen'
   include 'puppet'
+  include 'tools'
 }
 
 node /^tvmobili.*/ inherits default {
