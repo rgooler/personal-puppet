@@ -105,11 +105,11 @@ if [[ "$SSH_AGENT_PID" == "" ]]; then
 else
   export SSH_AUTH_SOCK=`find /tmp -name agent.$(expr $SSH_AGENT_PID - 1) 2>/dev/null`
 fi
-if `ssh-add -l | fgrep "agent has no identities" >/dev/null`; then
-  for key in $HOME/.ssh/*.pub; do
-    ssh-add -t 24h $HOME/.ssh/`basename $key .pub`
-  done
-fi
+#if `ssh-add -l | fgrep "agent has no identities" >/dev/null`; then
+#  for key in $HOME/.ssh/*.pub; do
+#    ssh-add -t 24h $HOME/.ssh/`basename $key .pub`
+#  done
+#fi
 
 export PATH=$PATH:$HOME/bin:$HOME/git/assistly/operations/bin:/usr/local/ec2/bin:/usr/local/aws-iam-tools/bin:/usr/local/elb/bin
 export EDITOR=vim
@@ -179,5 +179,9 @@ githelp() {
   echo "cleanup: Reset repo to master"
 }
 
-. /etc/bash_completion
-. /etc/bash.functions
+if [[ -f /etc/bash_completion ]]; then
+    . /etc/bash_completion
+fi
+if [[ -f /etc/bash.functions ]]; then
+    . /etc/bash.functions
+fi
