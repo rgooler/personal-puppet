@@ -4,4 +4,5 @@ class common::defines{
     include 'common::defines::configure'
     include 'common::defines::make'
     include 'common::defines::better_cron'
+    include 'common::defines::dpkg_install'
 }
