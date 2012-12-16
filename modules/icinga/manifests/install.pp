@@ -3,7 +3,7 @@ class icinga::install {
 
   package { 'fcgiwrap':
     ensure => latest,
-    notify => Class['nginx::service'],
+    notify => Class['nginx::services'],
   }
 
   package { 'icinga':
