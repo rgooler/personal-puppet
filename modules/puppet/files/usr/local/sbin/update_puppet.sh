@@ -11,15 +11,15 @@ command -v git >/dev/null 2>&1 || { echo "I require git but it's not installed. 
 command -v puppet >/dev/null 2>&1 || { echo "I require puppet but it's not installed. Please install puppet if on debian/ubuntu" >&2; exit 1; }
 
 #If the puppet dir does not exist, clone it
-if [ ! -d "/etc/puppet" ]; then
-    cd /etc
-    git clone https://github.com/jippen/personal-puppet.git /etc/puppet
-fi
+#if [ ! -d "/etc/puppet" ]; then
+#    cd /etc
+#    git clone https://github.com/jippen/personal-puppet.git /etc/puppet
+#fi
 
 cd /etc/puppet
 
 #Nuke local changes
-git stash -q
+#git stash -q
 
 #Update repo
 git pull -q
