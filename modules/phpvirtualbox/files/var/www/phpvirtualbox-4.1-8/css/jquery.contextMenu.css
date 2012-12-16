@@ -1,0 +1,88 @@
+/* Generic context menu styles */
+.contextMenu {
+	position: absolute;
+	z-index: 9999999;
+	border: solid 1px #CCC;
+	padding: 0px;
+	margin: 0px;
+	display: none;
+	background-color: #e9e9e9;
+	background-repeat: no-repeat;
+}
+
+ul.contextMenu {
+	background: #e9e9e9;
+	background: -webkit-gradient(linear, left top, right top, from(#ffffff), to(#d9d9d9)); /* for webkit browsers */
+	background: -moz-linear-gradient(left,  #ffffff, #d9d9d9); /* for firefox 3.6+ */
+	background: -o-linear-gradient(left,  #ffffff, #d9d9d9);
+	filter: progid:DXImageTransform.Microsoft.gradient(GradientType=1, startColorstr='#ffffff', endColorstr='#d9d9d9'); /* for IE */	
+}
+
+.contextMenu LI {
+	list-style: none;
+	padding: 0px;
+	margin: 0px;
+	white-space: nowrap;
+	border: 1px solid transparent;
+}
+
+.contextMenu LI input {
+	padding-left: 2px;
+}
+.contextMenu a, .contextMenu SPAN {
+	color: #333;
+	text-decoration: none;
+	display: block;
+	line-height: 20px;
+	height: 20px;
+	background-position: 6px center;
+	background-repeat: no-repeat;
+	outline: none;
+	padding: 1px 5px;
+	padding-left: 28px;
+	border: 0px solid transparent;
+	cursor: pointer;
+	white-space: nowrap;
+}
+
+ul.contextMenuNoBG li {
+	cursor: pointer;
+	border: 1px solid transparent;
+}
+ul.contextMenuNoBG li.disabled {
+	cursor: default;
+}
+ul.contextMenuNoBG SPAN {
+	display: inline;
+	padding-left: 2px;
+}
+ul.contextMenuNoBG A {
+	padding-left: 2px;
+}
+
+ul.contextMenu LI.hover {
+	background-color: #f0f8ff;
+	border: 1px solid #aaaaaa;
+}
+ 
+.contextMenu LI.disabled img {
+	display: none;
+}
+
+.contextMenu LI.hover.disabled, .contextMenu LI.disabled A, .contextMenu LI.disabled SPAN {
+	color: #AAA;
+	cursor: default;
+}
+
+.contextMenu LI.hover.disabled, .contextMenu LI.hover.disabled A {
+	background-color: transparent;
+}
+
+.contextMenu LI.separator {
+	border-top: 1px solid #CCC;
+}
+
+.contextMenu LI:first {
+	border-top: 1px solid transparent;
+}
+

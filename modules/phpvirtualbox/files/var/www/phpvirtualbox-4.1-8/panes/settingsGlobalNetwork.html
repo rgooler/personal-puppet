@@ -1,0 +1,340 @@
+<!-- 
+
+	General Network Preferences
+	Copyright (C) 2010-2012 Ian Moore (imoore76 at yahoo dot com)
+	
+	$Id: settingsGlobalNetwork.html 368 2012-01-02 15:09:41Z imooreyahoo@gmail.com $
+
+ -->
+<div>
+<table style='width: auto; margin-left:auto; margin-right:auto;'>
+	<tr>
+		<td colspan='2'><span class='translate'>Host-only Networks:</span></td>
+	</tr>
+	<tr style='vertical-align:top'>
+		<td style='width: 400px'>
+			<ul id='vboxSettingsGlobalNetList' class='vboxBordered vboxList vboxHover' style='width: 400px; margin-top: 0px;'>
+				<li>interface</li>
+			</ul>
+		</td>
+		<td style='width: 10px' id='vboxSettingsGlobalNetToolbar'></td>
+	</tr>
+	<tr id='vboxSettingsGlobalNetLabels'>
+		<td colspan='2'>
+			<table style='width: 100%'>
+				<tr>
+					<th style='width: auto; white-space: nowrap; text-align: left'><span class='translate'>Adapter</span>:</th>
+					<td id='vboxSettingsGlobalNetAdapterLabel' style='width: 100%; white-space: nowrap; text-align: left'></td>
+				</tr>
+				<tr>
+					<th style='width: auto; white-space: nowrap; text-align: left'><span class='translate'>DHCP Server</span>:</th>
+					<td id='vboxSettingsGlobalNetDHCPLabel' style='width: 100%; white-space: nowrap; text-align: left'></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+
+<!--  Edit Host Networking Properties Dialog -->
+<div id='vboxSettingsGlobalNetEditDialog' style='display: none'>
+
+	<div id='vboxSettingsGlobalNetEdit' class='vboxTabbed'>
+		<ul>
+			<li><a href="#vboxSettingsGlobalNetEditAdapter"><span class='translate'>Adapter</span></a></li>
+			<li><a href="#vboxSettingsGlobalNetEditDHCP"><span class='translate'>DHCP Server</span></a></li>		
+		</ul>
+		<div id="vboxSettingsGlobalNetEditAdapter" class="vboxDialogContent vboxTabContent">
+			<table class="vboxSettingsTable">
+				<tr>
+					<th><span class='translate'>IPv4 Address:</span></th>
+					<td><input type='text' class='vboxText' id='vboxSettingsGlobalNetIPv4' /></td>
+				</tr>
+				<tr>
+					<th><span class='translate'>IPv4 Network Mask:</span></th>
+					<td><input type='text' class='vboxText' id='vboxSettingsGlobalNetIPv4Mask' /></td>
+				</tr>
+				<tr>
+					<th><span class='translate'>IPv6 Address:</span></th>
+					<td><input type='text' class='vboxText' id='vboxSettingsGlobalNetIPv6' /></td>
+				</tr>
+				<tr>
+					<th><span class='translate'>IPv6 Network Mask Length:</span></th>
+					<td><input type='text' class='vboxText' id='vboxSettingsGlobalNetIPv6Mask' /></td>
+				</tr>
+			</table>
+		</div>
+		<div id="vboxSettingsGlobalNetEditDHCP" class='vboxDialogContent vboxTabContent'>
+			<table class="vboxSettingsTable">
+				<tr>
+					<td colspan='2'><label><input type='checkbox' class='vboxCheckbox vboxEnablerCheckbox' id='vboxSettingsGlobalNetDHCPEnabled' /> <span class='translate'>Enable Server</span></label></td>
+				</tr>
+				<tr>
+					<th><span class='translate'>Server Address:</span></th>
+					<td><input type='text' class='vboxText' id='vboxSettingsGlobalNetServerAddress' /></td>
+				</tr>
+				<tr>
+					<th><span class='translate'>Server Mask:</span></th>
+					<td><input type='text' class='vboxText' id='vboxSettingsGlobalNetServerMask' /></td>
+				</tr>
+				<tr>
+					<th><span class='translate'>Lower Address Bound:</span></th>
+					<td><input type='text' class='vboxText' id='vboxSettingsGlobalNetLower' /></td>
+				</tr>
+				<tr>
+					<th><span class='translate'>Upper Address Bound:</span></th>
+					<td><input type='text' class='vboxText' id='vboxSettingsGlobalNetUpper' /></td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</div>
+
+
+<!-- Main Div -->
+</div>
+
+
+<script type='text/javascript'>
+
+/* Build Toolbar */
+
+/*
+ * Init Shared Folder buttons and toolbar
+ */
+
+var sButtons = new Array(
+
+	{
+		'name' : 'addNet',
+		'label' : 'Add host-only network',
+		'icon' : 'add_host_iface',
+		'enabled' : function () { return true; },
+		'click' : function () {
+
+			var refreshInterfaces = function(){
+				var l = new vboxLoader();
+				l.add('hostOnlyInterfacesGet',function(d){$('#vboxSettingsDialog').data('vboxHostOnlyInterfaces',d);});
+				l.onLoad = vboxSettingsGlobalNetworkAddAdpaters;
+				l.run();				
+			};
+			
+			var l = new vboxLoader();
+			l.add('hostOnlyInterfaceCreate',function(d){
+
+				if(d && d.progress) {
+					vboxProgress(d.progress,function(){
+						setTimeout(refreshInterfaces,1000);
+					},{},null,trans('Add host-only network','UIGlobalSettingsNetwork'));
+				}
+				
+			});
+
+			l.run();
+
+		}
+	},
+
+	{
+		'name' : 'delNet',
+		'label' : 'Remove host-only network',
+		'icon' : 'remove_host_iface',
+		'enabled' : function (item) { return ($(item).data('interface')); },
+		'click' : function () {
+
+			var item = $('#vboxSettingsGlobalNetList').children('li.vboxListItemSelected').first();
+			
+			var buttons = {};
+			buttons[trans('OK','QIMessageBox')] = function() {
+
+				var dialog = this;
+				var item = $('#vboxSettingsGlobalNetList').children('li.vboxListItemSelected').first();
+
+				var l = new vboxLoader();
+				l.add('hostOnlyInterfaceRemove',function(d){
+
+					if(d && d.progress) {
+						vboxProgress(d.progress,function(){
+							var l2 = new vboxLoader();
+							l2.add('hostOnlyInterfacesGet',function(d){$('#vboxSettingsDialog').data('vboxHostOnlyInterfaces',d);});
+							l2.onLoad = vboxSettingsGlobalNetworkAddAdpaters;
+							l2.run();
+						},{},null,trans('Remove host-only network','UIGlobalSettingsNetwork'));
+					}
+					
+				},{'id':$(item).data('interface').id});
+
+				l.onLoad = function(){$(dialog).empty().remove();};
+				l.run();
+			};
+			vboxConfirm(trans('<p>Deleting this host-only network will remove the host-only interface this network is based on. Do you want to remove the (host-only network) interface <nobr><b>%1</b>?</nobr></p><p><b>Note:</b> this interface may be in use by one or more virtual network adapters belonging to one of your VMs. After it is removed, these adapters will no longer be usable until you correct their settings by either choosing a different interface name or a different adapter attachment type.</p>','UIMessageCenter').replace('%1',$(item).data('interface').name),buttons);	
+		}
+	},
+	{
+		'name' : 'editNet',
+		'label' : 'Edit host-only network',
+		'icon' : 'guesttools',
+		'enabled' : function (item) { return ($(item).data('interface')); },
+		'click' : function () {
+			vboxSettingsGlobalNetEditDialog();
+		}
+	}
+);
+
+var netToolbar = new vboxToolbarSmall(sButtons);
+netToolbar.context = 'UIGlobalSettingsNetwork';
+netToolbar.addButtons('vboxSettingsGlobalNetToolbar');
+$('#vboxSettingsGlobalNetList').bind('select',netToolbar.update);
+
+$('#vboxSettingsGlobalNetList').bind('select',function(e,i){
+	if(i) {
+		$('#vboxSettingsGlobalNetAdapterLabel').html($(i).data('interface').dhcpEnabled ? trans('Automatically configured','UIGlobalSettingsNetwork') : trans('Manually configured','UIGlobalSettingsNetwork'));
+		$('#vboxSettingsGlobalNetDHCPLabel').html($(i).data('interface').dhcpServer.enabled ? trans('Enabled','UIGlobalSettingsNetwork') : trans('Disabled','UIGlobalSettingsNetwork'));
+	} else {
+		$('#vboxSettingsGlobalNetAdapterLabel').html('');
+		$('#vboxSettingsGlobalNetDHCPLabel').html('');		
+	}
+});
+
+
+/*
+ *
+ * Function to fill network adapters
+ * 
+ */
+function vboxSettingsGlobalNetworkAddAdpater(n) {
+
+	// If the adapter exists, don't add it
+	var exists = false;
+	$('#vboxSettingsGlobalNetList').children('li').each(function(){
+		if($(this).data('interface').id == n.id) {
+			exists = true;
+			return false;
+		}
+	});
+
+	if(exists) return;
+	
+	$('<li />').attr({'class':'vboxListItem'}).html($('<div />').text(n.name).html()).hover(function(){$(this).addClass('vboxHover');},function(){$(this).removeClass('vboxHover');}).data('interface',n).click(function(){
+		$(this).parent().children('li.vboxListItemSelected').removeClass('vboxListItemSelected').addClass('vboxListItem');
+		$(this).addClass('vboxListItemSelected').removeClass('vboxListItem');
+		$('#vboxSettingsGlobalNetList').trigger('select',this);
+	}).appendTo($('#vboxSettingsGlobalNetList'));
+	
+}
+
+/*
+ * 
+ * Fill network adapters
+ *
+ */
+function vboxSettingsGlobalNetworkAddAdpaters() {
+	$('#vboxSettingsGlobalNetList').children().remove();
+	var nics = $('#vboxSettingsDialog').data('vboxHostOnlyInterfaces').networkInterfaces;
+	for(var i = 0; i < nics.length; i++) {
+		vboxSettingsGlobalNetworkAddAdpater(nics[i]);
+	}
+	$('#vboxSettingsGlobalNetList').trigger('select',null);
+}
+vboxSettingsGlobalNetworkAddAdpaters();
+
+
+
+
+
+/*
+ *
+ * Edit Network Interface Dialog 
+ *
+ */
+vboxInitDisplay('vboxSettingsGlobalNetEditDialog','UIGlobalSettingsNetworkDetails');
+var buttons = {};
+buttons[trans('OK','QIMessageBox')] = function(){
+
+	var nic = $('#vboxSettingsGlobalNetList').children('li.vboxListItemSelected').first().data('interface');
+	
+	nic.IPAddress = $('#vboxSettingsGlobalNetIPv4').val();
+	nic.networkMask = $('#vboxSettingsGlobalNetIPv4Mask').val();
+	nic.IPV6Address = $('#vboxSettingsGlobalNetIPv6').val();
+	nic.IPV6NetworkMaskPrefixLength = $('#vboxSettingsGlobalNetIPv6Mask').val();
+	
+	nic.dhcpServer.enabled = ($('#vboxSettingsGlobalNetDHCPEnabled').prop('checked') ? 1 : 0);
+	nic.dhcpServer.IPAddress = $('#vboxSettingsGlobalNetServerAddress').val();
+	nic.dhcpServer.networkMask = $('#vboxSettingsGlobalNetServerMask').val();
+	nic.dhcpServer.lowerIP = $('#vboxSettingsGlobalNetLower').val();
+	nic.dhcpServer.upperIP = $('#vboxSettingsGlobalNetUpper').val();
+
+	$('#vboxSettingsGlobalNetList').children('li.vboxListItemSelected').first().data('interface',nic);
+	
+	$(this).dialog("close");
+};
+buttons[trans('Cancel','QIMessageBox')] = function(){$(this).dialog("close");};
+$('#vboxSettingsGlobalNetEditDialog').dialog({'buttons':buttons,'width':500,'modal':true,'autoOpen':false,'stack':true,'dialogClass':'vboxDialogContent','title':'<img src="images/vbox/nw_16px.png" class="vboxDialogTitleIcon" /> ' +trans('Host-only Network Details','UIGlobalSettingsNetworkDetails')});
+
+
+function vboxSettingsGlobalNetEditDialog() {
+
+	var nic = $('#vboxSettingsGlobalNetList').children('li.vboxListItemSelected').first().data('interface');
+
+	// Set Form Values
+	$('#vboxSettingsGlobalNetIPv4').val(nic.IPAddress);
+	$('#vboxSettingsGlobalNetIPv4Mask').val(nic.networkMask);
+
+	if(nic.IPV6Supported) {
+		$('#vboxSettingsGlobalNetIPv6').prop('disabled',false).val(nic.IPV6Address).closest('tr').find('span').removeClass('vboxDisabled');
+		$('#vboxSettingsGlobalNetIPv6Mask').prop('disabled',false).val(nic.IPV6NetworkMaskPrefixLength).closest('tr').find('span').removeClass('vboxDisabled');
+	} else {
+		$('#vboxSettingsGlobalNetIPv6').prop('disabled',true).val('').closest('tr').find('span').addClass('vboxDisabled');
+		$('#vboxSettingsGlobalNetIPv6Mask').prop('disabled',true).val('').closest('tr').find('span').addClass('vboxDisabled');
+	}
+
+	if(nic.dhcpServer && nic.dhcpServer.networkName) {
+		$('#vboxSettingsGlobalNetServerAddress').val(nic.dhcpServer.IPAddress);
+		$('#vboxSettingsGlobalNetServerMask').val(nic.dhcpServer.networkMask);
+		$('#vboxSettingsGlobalNetLower').val(nic.dhcpServer.lowerIP);
+		$('#vboxSettingsGlobalNetUpper').val(nic.dhcpServer.upperIP);
+	} else {
+		$('#vboxSettingsGlobalNetServerAddress').val('');
+		$('#vboxSettingsGlobalNetServerMask').val('');
+		$('#vboxSettingsGlobalNetLower').val('');
+		$('#vboxSettingsGlobalNetUpper').val('');
+	}
+
+	
+	$('#vboxSettingsGlobalNetEdit').tabs('select',0);
+
+	if(nic.dhcpServer && nic.dhcpServer.enabled && !$('#vboxSettingsGlobalNetDHCPEnabled').prop('checked')) {
+		$('#vboxSettingsGlobalNetDHCPEnabled').prop('checked',true);
+		$('#vboxSettingsGlobalNetDHCPEnabled').click();
+		$('#vboxSettingsGlobalNetDHCPEnabled').prop('checked',true);
+	} else if(nic.dhcpServer && !nic.dhcpServer.enabled && $('#vboxSettingsGlobalNetDHCPEnabled').prop('checked')) {
+		$('#vboxSettingsGlobalNetDHCPEnabled').prop('checked',false);
+		$('#vboxSettingsGlobalNetDHCPEnabled').click();
+		$('#vboxSettingsGlobalNetDHCPEnabled').prop('checked',false);
+	}
+
+	$('#vboxSettingsGlobalNetEditDialog').dialog('open');
+
+}
+
+/* 
+ * 
+ * Update Data onSave() 
+ * 
+ */
+$('#vboxSettingsDialog').bind('save',function(){
+
+	$('#vboxSettingsDialog').data('vboxHostOnlyInterfaces').networkInterfaces = new Array();
+
+	$('#vboxSettingsGlobalNetList').children('li').each(function(){
+		$('#vboxSettingsDialog').data('vboxHostOnlyInterfaces').networkInterfaces[$('#vboxSettingsDialog').data('vboxHostOnlyInterfaces').networkInterfaces.length] = $(this).data('interface');		
+	});
+});
+
+/*
+ * Remove dialogs on close
+ */
+$('#vboxSettingsDialog').bind('close',function(){
+	$('#vboxSettingsGlobalNetEditDialog').remove();
+});
+ 
+</script>

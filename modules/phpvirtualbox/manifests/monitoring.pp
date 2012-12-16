@@ -1,0 +1,3 @@
+class phpvirtualbox::monitoring { 
+
+}

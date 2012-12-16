@@ -1,0 +1,679 @@
+<!-- 
+
+	Virtual Machine List
+	Copyright (C) 2010-2012 Ian Moore (imoore76 at yahoo dot com)
+	
+	$Id: vmlist.html 368 2012-01-02 15:09:41Z imooreyahoo@gmail.com $
+
+ -->
+<div id='vboxVMList'>
+	<div id='vboxVMListSpinner' style='text-align: center'>
+		<img src='images/spinner.gif' alt="" />
+	</div>
+</div>
+<script type='text/javascript'>
+
+
+/*
+ * 
+ *
+ * Startup for VM List and Toolbar
+ *
+ */
+
+// Create VM list
+var vboxVMList = new vboxVMList('vboxVMList');
+vboxVMList.interval = ($('#vboxIndex').data('vboxConfig').listUpdateInterval ? $('#vboxIndex').data('vboxConfig').listUpdateInterval : 5);
+// Failsafe
+if(isNaN(vboxVMList.interval)) vboxVMList.interval = 5;
+
+// VM List Context menu for each VM
+var sChildren = [];
+for(var i = 0; i < vboxVMActions.stop_actions.length; i++) {
+	sChildren[sChildren.length] = $.extend({},vboxVMActions[vboxVMActions.stop_actions[i]],{'name':vboxVMActions.stop_actions[i],'iconStringDisabled':'_disabled','context':(vboxVMActions[vboxVMActions.stop_actions[i]].context ? vboxVMActions[vboxVMActions.stop_actions[i]].context : 'UIActionPool')});
+}
+
+/*
+ * VM Context menu setup (menu per VM in list)
+ */
+vboxVMList.contextMenuItems = [
+	$.extend({},vboxVMActions['settings'],{'name':'settings'}),
+	$.extend({},vboxVMActions['clone'],{'name':'clone'}),
+	$.extend({},vboxVMActions['remove'],{'name':'remove'}),
+	$.extend({},vboxVMActions['start'],{'name':'start','separator' : true}),
+	$.extend({},vboxVMActions['stop'],{'name':'stop','icon':'state_powered_off','children':sChildren,'hide_on_disabled':true}),
+	$.extend({},vboxVMActions['discard'],{'name':'discard'}),
+	$.extend({},vboxVMActions['refresh'],{'name':'refresh','separator' : true}),
+	$.extend({},vboxVMActions['logs'],{'name':'logs'})
+];
+
+/*
+ * VM list context menu setup
+ */
+vboxVMList.parentContextMenuItems = [
+	$.extend({},vboxVMActions['new'],{'name':'new'}),
+	$.extend({},vboxVMActions['add'],{'name':'add'}),
+	{
+		'name':'fileImport',
+		'label':'Import Appliance...',
+		'icon':'import',
+		'click':function(){vboxWizardImportApplianceInit();},
+		'separator': true
+	},
+	{
+		'name':'fileExport',
+		'label':'Export Appliance...',
+		'icon':'export',
+		'click':function(){vboxWizardExportApplianceInit();}
+	}                                     
+];
+
+
+// Initial action update
+$('#vboxIndex').trigger('vmselect',null);
+
+// Start vboxVMList
+vboxVMList.run();
+
+
+/*
+ * Virtual Machine list object.
+ * 
+ * This may seem a bit odd: "self.FOO" instead of "this.FOO" used
+ * to get around JavaScript limitation. When a method is called
+ * as a result of an ajax request returning, "this" refers to the
+ * JavaScript window object rather than the originating object.
+ * Creating and using a class local "self" variable that refers
+ * to the object gets around this limitation.
+ */
+
+function vboxVMList(anchorid) {
+
+	var self = this;
+	this.vms = null;
+	this.anchorid = anchorid;
+	this.sortDefault = function(a,b){return strnatcasecmp(a.name,b.name);};
+	this._sortOrder = {};
+	this._updateSortOrder = false;
+	this.lastUpdatedDiv = null;
+	this.anchor = $('#'+anchorid);
+	this.interval = 5;
+	this.changed = false;
+	this.versionChecked = false;
+	this.contextMenuItems = [];
+	this.parentContextMenuItems = [];
+	this.contextMenuObj = null;
+	this.enforceVMOwnership = $('#vboxIndex').data('vboxConfig').enforceVMOwnership;
+	this.minimal = $('#vboxIndex').data('vboxConfig').vmListMinimal;
+	this.tip = trans('<nobr>%1<br></nobr><nobr>%2 since %3</nobr><br><nobr>Session %4</nobr>','UIVMListView');
+
+	
+	// If there are multiple servers configured, setup menu
+	if($('#vboxIndex').data('vboxConfig').servers.length) {
+
+		var servers = $('#vboxIndex').data('vboxConfig').servers;
+		var ul = $('<ul />').attr({'id':'vboxServerMenu','style':'display: none','class':'contextMenu'});
+		for(var i = 0; i < servers.length; i++) {
+			$('<li />').html("<a href='#" + $('<div />').html(servers[i].name).text() + "' style='background-image: url(images/vbox/OSE/VirtualBox_16px.png);'>"+$('<div />').html(servers[i].name).text()+"</a>").appendTo(ul);
+		}
+		$('#vboxIndex').append(ul);
+		
+	}
+	
+	// Update list of VMs
+	/////////////////////////
+	self.updateList = function(d) {
+
+		// We were stopped before the request returned data
+		if(!self._running) return;
+		
+		
+		if(!d || !d.vmlist) {
+			
+			vboxAlert(trans('There was an error obtaining the list of registered virtual machines from VirtualBox. Make sure vboxwebsrv is running and that the settings in config.php are correct.<p>The list of virtual machines will not begin auto-refreshing again until this page is reloaded.</p>','phpVirtualBox'));
+			
+			self.stop();
+			self.anchor.children().remove();
+			return;
+		}
+
+		// Don't refresh list while sorting
+		if(self._sorting) {
+			self._lastList = d;
+			return;
+		}
+
+		var currTime = new Date();
+		self.time = currTime.getTime();
+
+		/* Check Key
+			If we've changed hosts before the last ajax call to get a list of VMs
+			returns, we'd have a list of VMs from the previously selected VirtualBox
+			host.
+		*/
+		if(d.server_key != $('#vboxIndex').data('vboxConfig').key) return;
+		
+		currVMList = d.vmlist;
+		
+
+		// First time run?
+		if(self.vms === null) {
+			self.anchor.children().remove();
+			self.vms = {};
+		}
+
+		// Update sort order from request?
+		if(self._updateSortOrder) {
+			self._sortOrder = d.sortOrder;
+		}
+		
+		// check for empty VM list
+		if(self.sort) {
+			try {
+				currVMList.sort(self.sort);
+			} catch (err) {
+				vboxAlert('There was an error running your custom sort function. It will not be used.<p>'+err+'</p>');
+				self.sort = null;
+				currVMList.sort(self.sortDefault);
+			}
+		} else {
+			currVMList.sort(self.sortDefault);
+		}
+		
+		
+		// Host machine added manually
+		host = new Array({'id':'host','state':'Hosting','owner':'','name':$('#vboxIndex').data('vboxConfig').name,'OSTypeId':'VirtualBox_Host'});
+		currVMList = host.concat(currVMList);
+		
+		// Enforce VM ownership
+        if(self.enforceVMOwnership && !$('#vboxIndex').data('vboxSession').admin) {
+        	currVMList = jQuery.grep(currVMList,function(vm,i){
+        		return (vm.owner == $('#vboxIndex').data('vboxSession').user);
+        	});
+		}
+	
+		// Each item in list
+		var changed = false;
+		for(var i = 0; i < currVMList.length; i++) {	
+		
+			
+			// Does not exist, add to list
+			if(!self.vms[currVMList[i].id]) {
+				self.machineAdd(currVMList[i]);
+				changed = true;
+			// Update
+			} else {
+				changed = (self.updateVM(currVMList[i]) || changed);
+			}
+
+			self.vms[currVMList[i].id].lastUpdated = self.time;
+			
+			// Sort actual element
+			if($('#vboxVMListItem-'+self.anchorid+'-'+currVMList[i].id).index() != i) {
+				self.anchor.children('table:eq('+i+')').before($('#vboxVMListItem-'+self.anchorid+'-'+currVMList[i].id).detach());
+			}
+		}
+
+		// Check for any vms that should be removed
+		for(var id in self.vms) {
+			if(self.vms[id].lastUpdated != self.time) {
+				self.machineRemove(id);
+				changed = true;
+			}
+		}
+		
+		// Update "Last Updated" ?
+		if(self.lastUpdatedDiv) {
+			var hours = currTime.getHours();
+			var minutes = currTime.getMinutes();
+			var secs = currTime.getSeconds();
+			if (minutes < 10) minutes = "0" + minutes;
+			if (secs < 10) secs = "0" + secs;
+			
+			$(self.lastUpdatedDiv).html(hours+':'+minutes+':'+secs);
+		}
+		
+		if(changed && !self.changed) {
+			vboxNotifyBrowser(1);
+		} else if(self.changed && !changed) {
+			vboxNotifyBrowser();
+		}
+		
+		self.changed = changed;
+		
+	};
+	
+
+	// Update a VM in our list
+	self.updateVM = function(vmUpdate,index) {
+
+		var changed = false;
+		var changedProps = ['currentSnapshot','state','sessionState','OSTypeId','name','customIcon'];
+		
+		for(var i = 0; i < changedProps.length; i++) {
+			if(self.vms[vmUpdate.id][changedProps[i]] != vmUpdate[changedProps[i]]) {
+				changed = true;
+				break;
+			}
+		}
+		
+		vmUpdate.selected = self.vms[vmUpdate.id].selected;
+
+		if(changed) {
+
+			$('#vboxVMListItem-'+self.anchorid+'-'+vmUpdate.id).replaceWith(self.vmHTML(vmUpdate));
+			
+			if(self.vms[vmUpdate.id].selected) {
+				
+				// update selected vm
+				self.vms[vmUpdate.id] = vmUpdate;
+				$('#vboxVMListItem-'+self.anchorid+'-'+vmUpdate.id).trigger('click');
+			}
+			
+		}
+		if(!vmUpdate.selected)
+			self.vms[vmUpdate.id] = vmUpdate;
+
+		return changed;
+
+	};
+
+	self.machineAdd = function(vm, index) {
+		self.vms[vm.id] = vm;
+		vmn = self.vms[vm.id];
+		self.anchor.append(self.vmHTML(vmn));
+	
+	};
+
+	self.vmHTML = function (vmn) {
+		
+		var tbl = $('<table />').attr({'id':'vboxVMListItem-'+self.anchorid+'-'+vmn.id,'class':"vboxVMListVM vboxListItem" + (self.vms[vmn.id].selected ? "Selected" : "")}).bind('click',function(e){
+			
+			if(vmn.id == 'host' && $('#vboxIndex').data('selectedVM') && $('#vboxIndex').data('selectedVM')['id'] == vmn.id) return;
+			if(e.pageX !== undefined && $('#vboxIndex').data('selectedVM') && $('#vboxIndex').data('selectedVM')['id'] == vmn.id) return;
+			
+			$('#vboxIndex').data({'selectedVM':vmn}).trigger('vmselect',[vmn]);
+			
+		}).hover(function(){if(self.dragging)return;$(this).addClass('vboxHover');},function(){$(this).removeClass('vboxHover');}).data('vmid',vmn.id);
+
+		var tr = $('<tr />');
+		
+		// VM OS type icon
+		if($('#vboxIndex').data('vboxConfig').enableCustomIcons && vmn.customIcon) {
+			$('<td />').attr({'rowspan':'2'}).html("<img src='" + vmn.customIcon + "' class='vboxVMIcon' />").appendTo(tr);
+		} else {
+			$('<td />').attr({'rowspan':'2'}).html("<img src='images/vbox/" + vboxGuestOSTypeIcon(vmn.OSTypeId) + "' class='vboxVMIcon" + (vmn.id == 'host' ? " vboxHostIcon" : "") + "' />").appendTo(tr);
+		}
+		
+		
+		// VM Name
+		var td = $('<td />').attr({'class':'vboxVMTitle'});
+		
+		// Host can have HTML in name
+		if(vmn.id == 'host') {
+			
+			// Check for multiple server config
+			if($('#vboxIndex').data('vboxConfig').servers.length) {
+				var span = $('<span />').attr({'class':'vboxServerLink'}).text('('+$('#vboxIndex').data('vboxConfig').name+')').contextMenu({
+						menu: 'vboxServerMenu',
+						button: 0,
+						mode: 'menu'
+					},
+					function(a) {
+						if(a == $('#vboxIndex').data('vboxConfig').name) return;						
+						vboxSetCookie("vboxServer",a);
+						$('#vboxIndex').trigger('hostChange',[a]);
+					}
+				);
+				$(td).html('<span class="vboxVMName">VirtualBox</span> ').append(span);
+			} else {				
+				$(td).html('<span class="vboxVMName">VirtualBox</span> ('+vmn.name+')');
+			}
+		} else {
+			
+			$(td).append('<span class="vboxVMName">'+$('<span />').text(vmn.name).html()+'</span>'+ (vmn.currentSnapshot ? ' (' + $('<span />').text(vmn.currentSnapshot).html() + ')' : ''));
+			
+			var sdate = new Date(vmn.lastStateChange * 1000);
+
+			// Table gets tool tips
+			tip = self.tip.replace('%1',('<b>'+$('<span />').text(vmn.name).html()+'</b>'+(vmn.currentSnapshot ? ' (' + $('<span />').text(vmn.currentSnapshot).html() + ')' : ''))).replace('%2',trans(vboxVMState(vmn.state),'VBoxGlobal')).replace('%3',sdate.toLocaleString()).replace('%4',trans(vmn.sessionState,'VBoxGlobal'));
+			$(tbl).tipped({'source':tip,'position':'mouse','delay':2000});
+		}
+		
+		$(tr).append(td).appendTo(tbl);
+		
+		
+		var tr = $('<tr />');
+		
+		var td = $('<td />').attr({'class':(vmn.id != 'host' && vmn.sessionState != 'Unlocked' ? 'vboxVMSessionOpen' : '')}).html("<img src='images/vbox/" + vboxMachineStateIcon(vmn.state) +"' /> <span class='vboxVMState'>" + trans(vboxVMState(vmn.state),'VBoxGlobal') + '</span>');
+
+		// Add VirtualBox version if hosting
+		if(vmn.id == 'host') {
+			
+			$(td).append(' - ' + $('#vboxIndex').data('vboxConfig').version.string);
+			
+			// Check for version mismatches?
+			if(!self.versionChecked) {
+				self.versionChecked = true;
+				var vStr = '4.1';			
+				var vers = $('#vboxIndex').data('vboxConfig').version.string.replace('_OSE','').split('.');
+				if(vers[0]+'.'+vers[1] != vStr) {
+					vboxAlert('This version of phpVirtualBox ('+vStr+'-x) is incompatible with VirtualBox ' + $('#vboxIndex').data('vboxConfig').version.string + ". You probably need to <a href='http://code.google.com/p/phpvirtualbox/downloads/list?q=phpvirtualbox-"+vers[0]+'.'+vers[1]+"' target=_blank>download the latest phpVirtualBox " + vers[0]+'.'+vers[1] + "-x</a>.<p>See the Versioning section <a href='http://code.google.com/p/phpvirtualbox/downloads/detail?name=README.txt' target=_blank>here</a> for more information</p>",{'width':'auto'});
+				}
+			}			
+		}
+		
+		$(tr).append(td).appendTo(tbl);
+		
+		// Special case for minimal vms in VM list
+		if(self.minimal && vmn.id != 'host') {
+			
+			// This just contains the os img
+			var cld = $(tbl).find('td').first().remove().children().first();
+			
+			// title
+			var ttl = $(tbl).find('td.vboxVMTitle').first().remove().html();
+			
+			// State icon
+			var si = $(tbl).find('img').first();
+			
+			$(tbl).empty().addClass('vboxVMListMinimal').append($('<tr />').append($('<td />').append(cld).append(si).append(ttl)));
+			
+		}
+		
+		// Context menu?
+		if(self.contextMenuObj) {
+			$(tbl).contextMenu({
+				menu: self.contextMenuObj.menuId(),
+				menusetup : function(el) {
+					if(!$(el).hasClass('vboxListItemSelected')) $(el).trigger('click');
+				}
+			},self.contextMenuObj.menuClickCallback);
+		}
+		
+		// Open settings on dblclick
+		$(tbl).dblclick(function(){
+			if(self.contextMenuItems[0].enabled($('#vboxIndex').data('selectedVM')))
+				self.contextMenuItems[0].click();
+		});
+		
+		return tbl;
+		
+	};
+
+	self.machineRemove = function(id) {
+		if(self.vms[id].selected) { $('#vboxIndex').trigger('vmselect',null); }
+		$('#vboxVMListItem-'+self.anchorid+'-'+id).remove();
+		delete self.vms[id];
+	};
+
+	// select VM in list
+	self.selectVM = function(e,vm) {
+		var uuidsel = (vm && vm.id ? vm.id : 'null');
+		for(var id in self.vms) {
+		    if (typeof self.vms[id] !== 'function') {
+				if(id == uuidsel) {
+					self.vms[id].selected = true;
+					$('#vboxVMListItem-'+self.anchorid+'-'+id).removeClass('vboxListItem').addClass('vboxListItemSelected');
+				} else {
+					self.vms[id].selected = false;
+					$('#vboxVMListItem-'+self.anchorid+'-'+id).addClass('vboxListItem').removeClass('vboxListItemSelected');
+				}
+		    }
+		}
+		self.selected = uuidsel;
+	};
+
+	// return currently selected VM
+	self.getSelectedVM = function () {
+		return (self.selected == null ? null : self.vms[self.selected]);
+	};
+
+	/*
+	 *
+	 * Main run() function. Should only be called once. Though
+	 * stop() and start() can be called many times.
+	 *
+	 */
+	self.run = function() {
+		
+		if(self._running) return;
+
+		// Subscribe to selected VM changes and refreshes
+		$('#vboxIndex').bind('vmselect',self.selectVM).bind('vmlistreload',function() {
+
+			// Get selected vm
+			var svm = self.selected;
+			
+			// Stop vmlist from refreshing..
+			self.stop();
+
+			// ask for new one
+			vboxAjaxRequest('vboxGetMachines',{},function(d){
+				self.start();
+				self.updateList(d);
+				if(svm) $('#vboxVMListItem-'+self.anchorid+'-'+svm).trigger('click');
+			});
+			
+			
+		}).bind('vmlistrefresh',function(){
+			self.refresh();
+		}).bind('hostChange',function(){
+			$('#vboxIndex').data({'selectedVM':null}).trigger('vmselect',null);
+			self.stop();
+			
+		}).bind('hostChanged',function(){
+
+			// These may change based on host configuration
+			self.enforceVMOwnership = $('#vboxIndex').data('vboxConfig').enforceVMOwnership;
+			self.minimal = $('#vboxIndex').data('vboxConfig').vmListMinimal;
+
+			self.start();
+		});
+		
+		// Sort functions
+		switch($('#vboxIndex').data('vboxConfig').vmListSort) {
+		
+			// Sort by GUI
+			case 'gui':
+			case 'GUI':
+				
+				self.sort = function(a,b) {
+					
+					// Check for host
+					if(a.id == 'host') return -1;
+					if(b.id == 'host') return 1;
+					
+					//A is not in sort list
+					if(typeof(self._sortOrder[a.id]) == 'undefined') {
+						if(typeof(self._sortOrder[b.id]) == 'undefined') return self.sortDefault(a,b);
+						return -1; // b is defined, a is not
+					}
+					if(typeof(self._sortOrder[b.id]) == 'undefined') return 1; // a is defined, b is not
+					if(parseInt(self._sortOrder[a.id]) == parseInt(self._sortOrder[b.id])) return 0;
+					return(parseInt(self._sortOrder[a.id]) < parseInt(self._sortOrder[b.id]) ? -1 : 1);
+					
+				};
+
+				// Use returned sort order
+				self._updateSortOrder = true;
+				
+				break;
+			
+			// Sort by OS type
+			case 'os':
+			case 'OS':				
+				self.sort = function(a,b) { return strnatcasecmp(a.OSTypeId,b.OSTypeId); };
+				break;
+				
+			// Sort by name - default
+			case 'name':
+				break;
+				
+			// Running vms placed at top of list
+			case 'running':
+				self.sort = function(a,b) {
+					if(a.state == "Running" && b.state != "Running") return -1;
+					if(b.state == "Running" && a.state != "Running") return 1;
+					return self.sortDefault(a,b);
+				};
+				break;
+		
+			// State change
+			case 'statechange':
+			case 'stateChange':
+				self.sort = function(a,b) {
+					if(a.lastStateChange > b.lastStateChange) return -1;
+					if(b.lastStateChange > a.lastStateChange) return 1;
+					return self.sortDefault(a,b);
+				};
+				break;
+				
+			// Custom sort function
+			default:
+				try {
+					eval("self.sort = " + $('#vboxIndex').data('vboxConfig').vmListSort);
+				} catch (err) {
+					vboxAlert('There was an error parsing your custom sort function. It will not be used.<p>'+err+'</p>');
+					self.sort = null;
+				}
+		}
+		
+		/*
+		 *
+		 * VM List context menu items?
+		 *
+		 */
+		if(self.contextMenuItems && self.contextMenuItems.length) {
+			
+			// Create context menu object
+			self.contextMenuObj = new vboxMenu(self.anchorid);
+			self.contextMenuObj.context = 'VBoxSelectorWnd';
+			self.contextMenuObj.addMenu(self.contextMenuItems);
+			
+			// Update context menu when selected VM changes
+			$('#vboxIndex').bind('vmselect',function(e,vm){
+				self.contextMenuObj.update(vm);				
+			});
+		}
+		
+		/*
+		 *
+		 * Parent element context menu
+		 *
+		 */
+		if(self.parentContextMenuItems && self.parentContextMenuItems.length) {
+
+			var vboxVMListPaneMenu = new vboxMenu(self.anchorid+'Pane');
+			vboxVMListPaneMenu.context = 'VBoxSelectorWnd';
+			vboxVMListPaneMenu.addMenu(self.parentContextMenuItems);
+	
+			$('#'+self.anchorid).parent().contextMenu({
+			  		menu: vboxVMListPaneMenu.menuId()
+			  	},
+			  	vboxVMListPaneMenu.menuClickCallback
+			);
+		
+		}
+		
+		
+		/*
+		 *
+		 * VM List sortable?
+		 *
+		 */
+		if($('#vboxIndex').data('vboxConfig').vmListSort == 'gui') {
+			
+			// God, I love jQuery
+			$('#'+self.anchorid).sortable({'axis':'y','start':function(){self._sorting=true;},'stop':function(){
+				self._sorting=false;
+				if(self._lastList) self.updateList(self._lastList);
+			},'update':function(){
+				var sortOrder = {};
+				var sortOrderCounter = 0;
+				$('#'+self.anchorid).children().each(function(){
+					if($(this).data('vmid') != 'host') {
+						sortOrder[$(this).data('vmid')] = sortOrderCounter++;
+					}
+				});
+				self._sortOrder = sortOrder;
+				self._updateSortOrder = false;
+				window.clearTimeout(self._sortOrderTimer);
+				vboxAjaxRequest('vboxMachineSortOrderSave',{'sortOrder':sortOrder},function(){
+					// Resume using sort order returned from server after one refresh interval
+					self._sortOrderTimer = window.setTimeout(function(){self._updateSortOrder = true;},self.interval*1000);
+				});
+			}});
+		}
+		
+		// Disable dragging selection
+		$('#'+self.anchorid).disableSelection();
+		
+		
+		self.start();
+
+	};
+	
+	
+	/*
+	 * Start VM list update
+	 */ 
+	self.start = function(noinit) {
+		
+		// already started
+		if(self._running) return;
+		
+		var cb = function() {
+			vboxAjaxRequest('vboxGetMachines',{},function(d) {
+				self.updateList(d);
+			});			
+		};
+		
+		// noinit is passed by refresh() since it just
+		// updated the list we don't need to immediately
+		// refresh it again
+		if(!noinit) cb();
+		
+		self._running = window.setInterval(cb,self.interval*1000);
+		
+		
+	};
+	
+	/*
+	 * Stop VM list updates and clear list
+	 */
+	self.stop = function() {
+		if(!self._running) return;
+		window.clearInterval(self._running);
+		self._running = null;
+		self.anchor.html("<div id='vboxVMListSpinner' style='text-align: center'><img src='images/spinner.gif' /></div>");
+		self.vms = self.selected = null;
+		$('#vboxIndex').data({'selectedVM':null}).trigger('vmselect',null);
+	};
+	
+	
+	/* Force an imediate background refresh. Called when a VM
+	 * attribute change is expected and we want it to show up
+	 * asap.
+	 */
+	self.refresh = function() {
+		
+		// Stop refresh interval
+		if(self._running)
+			window.clearInterval(self._running);
+		
+		// If we happen to get data in the background,
+		// ignore it because the update we're about to
+		// perform will be more authoritative. See updateList()
+		self._running = null;
+		
+		vboxAjaxRequest('vboxGetMachines',{},function(d) {
+			self.start(true);
+			self.updateList(d);
+		});			
+		
+	};
+
+}
+
+</script>
