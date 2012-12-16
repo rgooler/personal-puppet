@@ -1,0 +1,20 @@
+#####################################
+#  This file is managed by puppet   #   
+# Local changes WILL be overwritten #
+#####################################
+
+# Handle permalinks
+try_files $uri $uri/ /index.php;
+if (!-e $request_filename) {
+      rewrite ^.*$ /index.php last;
+}
+
+# Prevent execution of php scripts in upload directory
+location ~* (^(?!(?:(?!(php|inc)).)*/wp-content/uploads/).*?(php|inc)) {
+    try_files $uri = 404;
+    fastcgi_split_path_info ^(.+.php)(.*)$;
+    fastcgi_pass unix:/dev/shm/php-fpm-www.sock;
+    fastcgi_index index.php;
+    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    include fastcgi_params;
+}

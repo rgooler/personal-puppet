@@ -1,0 +1,13 @@
+#####################################
+#  This file is managed by puppet   #   
+# Local changes WILL be overwritten #
+#####################################
+
+server {
+  listen 80;
+  server_name <%= @name %>;
+
+  location / {
+    rewrite ^ <%= @target %> permanent;
+  }
+}

@@ -1,0 +1,17 @@
+#####################################
+#  This file is managed by puppet   #   
+# Local changes WILL be overwritten #
+#####################################
+
+# Don't break behind varnish
+port_in_redirect off;
+
+# Handle php  
+location ~ \.php$ {
+    # Filter out arbitrary code execution
+    location ~ \..*/.*\.php$ { return 404; }
+    
+    include        fastcgi_params;
+    fastcgi_pass   unix:/dev/shm/php-fpm-www.sock;
+    fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+}

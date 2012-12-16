@@ -1,3 +1,7 @@
-class nginx::services { 
+class nginx::services {
+
+  service { 'nginx':
+    ensure => running,
+  }
 
 }

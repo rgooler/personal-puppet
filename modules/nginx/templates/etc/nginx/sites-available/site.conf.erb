@@ -1,0 +1,17 @@
+#####################################
+#  This file is managed by puppet   #   
+# Local changes WILL be overwritten #
+#####################################
+
+server {
+  listen 80;
+  root /var/www/<%= @root %>;
+  server_name <%= @name %>;
+
+  <% if @php -%>
+  include /etc/nginx/conf.d/php;
+  location / {
+    index index.html index.htm index.php;
+  }
+  <% end -%>
+}
