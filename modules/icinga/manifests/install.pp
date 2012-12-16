@@ -1,6 +1,11 @@
 class icinga::install {
   include 'nginx::php'
 
+  package { 'fcgiwrap':
+    ensure => latest,
+    notify => Class['nginx::service'],
+  }
+
   package { 'icinga':
     ensure => latest,
   }
