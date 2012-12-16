@@ -8,3 +8,7 @@ node default {
 node /^tvmobili.*/ inherits default {
   include 'tvmobili'
 }
+
+node 'NFS' inherits default {
+  include 'icinga'
+}

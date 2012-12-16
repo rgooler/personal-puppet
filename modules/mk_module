@@ -1,0 +1,41 @@
+#!/bin/bash
+if [ "$#" -eq 0 ];then
+    echo "Usage: ./mk_module.sh <modulename>"
+    exit 1
+fi
+
+mkdir -p $1/manifests
+
+# init.pp
+echo "class $1 { "                    > $1/manifests/init.pp
+echo "  include '$1::install'"       >> $1/manifests/init.pp
+echo "  include '$1::configuration'" >> $1/manifests/init.pp
+echo "  include '$1::services'"      >> $1/manifests/init.pp
+echo "  include '$1::monitoring'"    >> $1/manifests/init.pp
+echo ""                              >> $1/manifests/init.pp
+echo "  Class['$1::install'] -> Class['$1::configuration'] -> Class['$1::services']" >> $1/manifests/init.pp
+echo "}"                             >> $1/manifests/init.pp
+
+#install.pp
+echo "class $1::install { "           > $1/manifests/install.pp
+echo ""                              >> $1/manifests/install.pp
+echo "}"                             >> $1/manifests/install.pp
+
+#configuration.pp
+echo "class $1::configuration { "     > $1/manifests/configuration.pp
+echo ""                              >> $1/manifests/configuration.pp
+echo "}"                             >> $1/manifests/configuration.pp
+
+#services.pp
+echo "class $1::services { "          > $1/manifests/services.pp
+echo ""                              >> $1/manifests/services.pp
+echo "}"                             >> $1/manifests/services.pp
+
+#monitoring.pp
+echo "class $1::monitoring { "        > $1/manifests/monitoring.pp
+echo ""                              >> $1/manifests/monitoring.pp
+echo "}"                             >> $1/manifests/monitoring.pp
+
+#Create readme
+echo "# $1"  > $1/README.md
+echo ""     >> $1/README.md
