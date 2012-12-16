@@ -5,7 +5,7 @@ class phpvirtualbox::install {
     owner   => 'www-data',
     group   => 'www-data',
     recurse => true,
-    source  => "puppet://modules/phpvirtualbox/var/www/phpvirtualbox-4.1-8",
+    source  => "puppet:///modules/phpvirtualbox/var/www/phpvirtualbox-4.1-8",
   }
 
   file { '/var/www/phpvirtualbox-4.1-11':
@@ -13,7 +13,7 @@ class phpvirtualbox::install {
     owner   => 'www-data',
     group   => 'www-data',
     recurse => true,
-    source  => "puppet://modules/phpvirtualbox/var/www/phpvirtualbox-4.1-11",
+    source  => "puppet:///modules/phpvirtualbox/var/www/phpvirtualbox-4.1-11",
   }
 
   file { '/var/www/phpvirtualbox-4.2-4':
@@ -21,7 +21,7 @@ class phpvirtualbox::install {
     owner   => 'www-data',
     group   => 'www-data',
     recurse => true,
-    source  => "puppet://modules/phpvirtualbox/var/www/phpvirtualbox-4.2-4",
+    source  => "puppet:///modules/phpvirtualbox/var/www/phpvirtualbox-4.2-4",
   }
 
 }
