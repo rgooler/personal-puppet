@@ -3,6 +3,7 @@
 
 #Ignore files containing secrets
 secret.pp
+modules/credentials
 
 #Ignore temp files
 *~
