@@ -1,7 +1,7 @@
 class nginx::install { 
   
   package { 'nginx':
-    ensure => "1.2.1-1ubuntu0ppa1~${lsbdistcodename}",
+    ensure => present,
   }
 
   file { '/etc/nginx/sites-available':
