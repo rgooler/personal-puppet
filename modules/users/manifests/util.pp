@@ -24,6 +24,7 @@ define user_acct($fullname, $uid, $groups=[], $recursehome=false){
     recurselimit => 3,
     purge        => false,
     checksum     => 'mtime',
+    ignore       => ['.git'],
     source       => "puppet:///modules/users/${name}",
   }
 }
