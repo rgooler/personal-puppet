@@ -1,4 +1,4 @@
-define user_acct($fullname, $uid, $groups=[]){
+define user_acct($fullname, $uid, $groups=[], $recursehome=false){
   group { $name:
     ensure => present,
     gid    => $uid,
@@ -14,14 +14,15 @@ define user_acct($fullname, $uid, $groups=[]){
     require    => Group[$name],
   }
 
-  #file { "/home/${name}":
-  #  ensure  => directory,
-  #  mode    => 0700,
-  #  owner   => $name,
-  #  group   => $group,
-  #  require => User[$name],
-  #  recurse => false,
-  #}
+  file { "/home/${name}":
+    ensure  => directory,
+    mode    => 0700,
+    owner   => $name,
+    group   => $group,
+    require => User[$name],
+    recurse => $recursehome,
+    source  => "puppet:///modules/users/${name}",
+  }
 }
 
 
