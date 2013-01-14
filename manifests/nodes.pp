@@ -1,6 +1,7 @@
 node default {
   include 'common'
-  include 'users::users::jippen'
+  #Broken until I figure out submodules
+  #include 'users::users::jippen'
   include 'puppet'
   include 'tools'
 }
