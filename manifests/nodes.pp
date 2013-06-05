@@ -15,4 +15,5 @@ node 'NFS' inherits default {
   #include 'icinga'
   #include 'virtualbox'
   #include 'phpvirtualbox'
+  include 'minecraft'
 }
