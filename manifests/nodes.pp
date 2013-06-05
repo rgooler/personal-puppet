@@ -11,8 +11,8 @@ node /^tvmobili.*/ inherits default {
 }
 
 node 'NFS' inherits default {
-  include 'nginx'
-  include 'icinga'
-  include 'virtualbox'
-  include 'phpvirtualbox'
+  #include 'nginx'
+  #include 'icinga'
+  #include 'virtualbox'
+  #include 'phpvirtualbox'
 }
