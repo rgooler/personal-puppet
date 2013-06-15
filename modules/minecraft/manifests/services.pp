@@ -16,15 +16,12 @@ class minecraft::services {
     source  => "puppet:///modules/minecraft/home/minecraft/minecraft/minecraft.sh",
   }
 
-  file { 'home/minecraft/minecraft/bukkit.yml'
+  file { '/home/minecraft/minecraft/bukkit.yml'
     ensure  => file,
     owner   => 'minecraft',
     group   => 'minecraft', 
     mode    => '0600',
     source  => "puppet:///modules/minecraft/home/minecraft/minecraft/bukkit.yml",
   }
-    
-}
-
-
-
+  
+  }
