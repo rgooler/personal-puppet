@@ -1,0 +1,5 @@
+enabled: false
+create-zone: 0
+delete-zone: 0
+allow-player: 0
+disallow-player: 0

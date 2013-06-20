@@ -5,7 +5,7 @@ file {  'home/minecraft/minecraft/plugins'
     owner  => 'minecraft',
     group  => 'minecraft',
     mode   => '0600'
-    source => "puppet://modules/minecraft/home/minecraft/minecraft/plugins",
+    source => "puppet:///modules/minecraft/home/minecraft/minecraft/plugins",
   }
 
   file {  '/home/minecraft/minecraft/plugins/DeathBukkit'
@@ -14,7 +14,7 @@ file {  'home/minecraft/minecraft/plugins'
     group   => 'minecraft',
     mode    => '0711',
     require => File["home/minecraft/minecraft/plugins"],
-    source => "puppet://modules/minecraft/home/minecraft/minecraft/plugins/DeathBukkit",
+    source => "puppet:///modules/minecraft/home/minecraft/minecraft/plugins/DeathBukkit",
   }
 
   file {  '/home/minecraft/minecraft/plugins/Deathbukkit/config.yml'
@@ -23,7 +23,7 @@ file {  'home/minecraft/minecraft/plugins'
     group   => 'minecraft',
     mode    => '0600',
     require => File["/home/minecraft/minecraft/plugins/Deathbukkit"],
-    source  => "puppet://modules/minecraft/home/minecraft/minecraft/plugins/DeathBukkit/config.yml",
+    source  => "puppet:///modules/minecraft/home/minecraft/minecraft/plugins/DeathBukkit/config.yml",
   }
 
  file {  '/home/minecraft/minecraft/plugins/deathbukkit-0.2.1.jar'
@@ -32,7 +32,7 @@ file {  'home/minecraft/minecraft/plugins'
     group   => 'minecraft',
     mode    => '0600',
     require => File["/home/minecraft/minecraft/plugins"],
-    source  => "puppet://modules/minecraft/home/minecraft/minecraft/plugins/deathbukkit-0.2.1.jar",
+    source  => "puppet:///modules/minecraft/home/minecraft/minecraft/plugins/deathbukkit-0.2.1.jar",
   }
 
   file {  '/home/minecraft/minecraft/plugins/iZone'
@@ -41,7 +41,7 @@ file {  'home/minecraft/minecraft/plugins'
      group   => 'minecraft',
      mode    => '0700',
      require => File["/home/minecraft/minecraft/plugins"],
-     source  => "puppet://modules/minecraft/home/minecraft/minecraft/plugins/iZone",
+     source  => "puppet:///modules/minecraft/home/minecraft/minecraft/plugins/iZone",
   }
 
   file {  '/home/minecraft/minecraft/plugins/iZone/config.yml'
@@ -50,7 +50,7 @@ file {  'home/minecraft/minecraft/plugins'
      group   => 'minecraft',
      mode    => '0600',
      require => File["/home/minecraft/minecraft/plugins/iZone"],
-     source  => "puppet://modules/minecraft/minecraft/home/minecraft/minecraft/plugins/iZone/confg.yml",
+     source  => "puppet:///modules/minecraft/minecraft/home/minecraft/minecraft/plugins/iZone/confg.yml",
   }
 
   file {  '/home/minecraft/minecraft/plugins/iZone/saves'
@@ -59,7 +59,7 @@ file {  'home/minecraft/minecraft/plugins'
     group   => 'minecraft',
     mode    => '0700',
     require => File["/home/minecraft/minecraft/plugins/iZone"],
-    source  => "puppet://modules/minecraft/minecraft/home/minecraft/minecraft/plugins/iZone/saves",
+    source  => "puppet:///modules/minecraft/minecraft/home/minecraft/minecraft/plugins/iZone/saves",
   }
 
   file {  '/home/minecraft/minecraft/plugins/iZone/saves/field.yml'
@@ -68,7 +68,7 @@ file {  'home/minecraft/minecraft/plugins'
     group   => 'minecraft',
     mode    => '0600',
     require => File["/home/minecraft/minecraft/plugins/iZone/saves"]
-    source  => "puppet://modules/minecraft/minecraft/home/minecraft/minecraft/plugins/iZone/saves/field.yml",
+    source  => "puppet:///modules/minecraft/minecraft/home/minecraft/minecraft/plugins/iZone/saves/field.yml",
   }
 
   file {  '/home/minecraft/minecraft/plugins/iZone/saves/GlassTower.yml'
@@ -77,7 +77,7 @@ file {  'home/minecraft/minecraft/plugins'
     group   => 'minecraft',
     mode    => '0600',
     require => File["/home/minecraft/minecraft/plugins/iZone/saves"]
-    source  => "puppet://modules/minecraft/minecraft/home/minecraft/minecraft/plugins/iZone/saves/GlassTower.yml"
+    source  => "puppet:///modules/minecraft/minecraft/home/minecraft/minecraft/plugins/iZone/saves/GlassTower.yml"
   }
  file {  '/home/minecraft/minecraft/plugins/iZone/saves/GuardTower.yml'
     ensure  => file,
@@ -85,7 +85,7 @@ file {  'home/minecraft/minecraft/plugins'
     group   => 'minecraft',
     mode    => '0600',
     require => File["/home/minecraft/minecraft/plugins/iZone/saves"]
-    source  => "puppet://modules/minecraft/minecraft/home/minecraft/minecraft/plugins/iZone/saves/GuardTower.yml"
+    source  => "puppet:///modules/minecraft/minecraft/home/minecraft/minecraft/plugins/iZone/saves/GuardTower.yml"
   }
 
   file {  '/home/minecraft/minecraft/plugins/iZone/saves/JungleHouse.yml'
@@ -94,7 +94,7 @@ file {  'home/minecraft/minecraft/plugins'
     group   => 'minecraft',
     mode    => '0600',
     require => File["/home/minecraft/minecraft/plugins/iZone/saves"]
-    source  => "puppet://modules/minecraft/minecraft/home/minecraft/minecraft/plugins/iZone/saves/JungleHouse.yml"
+    source  => "puppet:///modules/minecraft/minecraft/home/minecraft/minecraft/plugins/iZone/saves/JungleHouse.yml"
 
   file {  '/home/minecraft/minecraft/plugins/iZone/saves/MineShack.yml'
     ensure  => file,
@@ -102,7 +102,7 @@ file {  'home/minecraft/minecraft/plugins'
     group   => 'minecraft',
     mode    => '0600',
     require => File["/home/minecraft/minecraft/plugins/iZone/saves"]
-    source  => "puppet://modules/minecraft/minecraft/home/minecraft/minecraft/plugins/iZone/saves/MineShack.yml"
+    source  => "puppet:///modules/minecraft/minecraft/home/minecraft/minecraft/plugins/iZone/saves/MineShack.yml"
   }
 
   file {  '/home/minecraft/minecraft/plugins/iZone/saves/Paddock.yml'
@@ -111,7 +111,7 @@ file {  'home/minecraft/minecraft/plugins'
     group   => 'minecraft',
     mode    => '0600',
     require => File["/home/minecraft/minecraft/plugins/iZone/saves"]
-    source  => "puppet://modules/minecraft/minecraft/home/minecraft/minecraft/plugins/iZone/saves/Paddock.yml"
+    source  => "puppet:///modules/minecraft/minecraft/home/minecraft/minecraft/plugins/iZone/saves/Paddock.yml"
   }
 
   file {  '/home/minecraft/minecraft/plugins/iZone/saves/SafeHouse.yml'
@@ -120,7 +120,7 @@ file {  'home/minecraft/minecraft/plugins'
     group   => 'minecraft',
     mode    => '0600',
     require => File["/home/minecraft/minecraft/plugins/iZone/saves"]
-    source  => "puppet://modules/minecraft/minecraft/home/minecraft/minecraft/plugins/iZone/saves/SafeHouse.yml"
+    source  => "puppet:///modules/minecraft/minecraft/home/minecraft/minecraft/plugins/iZone/saves/SafeHouse.yml"
   }
 
   file {  '/home/minecraft/minecraft/plugins/iZone/saves/SnowBunker.yml'
@@ -129,7 +129,7 @@ file {  'home/minecraft/minecraft/plugins'
     group   => 'minecraft',
     mode    => '0600',
     require => File["/home/minecraft/minecraft/plugins/iZone/saves"]
-    source  => "puppet://modules/minecraft/minecraft/home/minecraft/minecraft/plugins/iZone/saves/SnowBunker.yml"
+    source  => "puppet:///modules/minecraft/minecraft/home/minecraft/minecraft/plugins/iZone/saves/SnowBunker.yml"
   }
 
 file {  '/home/minecraft/minecraft/plugins/iZone/saves/TreeFarm.yml'
@@ -138,7 +138,7 @@ file {  '/home/minecraft/minecraft/plugins/iZone/saves/TreeFarm.yml'
     group   => 'minecraft',
     mode    => '0600',
     require => File["/home/minecraft/minecraft/plugins/iZone/saves"]
-    source  => "puppet://modules/minecraft/minecraft/home/minecraft/minecraft/plugins/iZone/saves/TreeFarm.yml"
+    source  => "puppet:///modules/minecraft/minecraft/home/minecraft/minecraft/plugins/iZone/saves/TreeFarm.yml"
   }
 
   file {  '/home/minecraft/minecraft/plugins/iZone/saves/VillageHouse.yml'
@@ -147,7 +147,7 @@ file {  '/home/minecraft/minecraft/plugins/iZone/saves/TreeFarm.yml'
     group   => 'minecraft',
     mode    => '0600',
     require => File["/home/minecraft/minecraft/plugins/iZone/saves"]
-    source  => "puppet://modules/minecraft/minecraft/home/minecraft/minecraft/plugins/iZone/saves/VillageHouse.yml"
+    source  => "puppet:///modules/minecraft/minecraft/home/minecraft/minecraft/plugins/iZone/saves/VillageHouse.yml"
  }
 
   file {  '/home/minecraft/minecraft/plugins/iZone/vault.yml'
@@ -156,7 +156,7 @@ file {  '/home/minecraft/minecraft/plugins/iZone/saves/TreeFarm.yml'
     group   => 'minecraft',
     mode    => '0600',
     require => File["/home/minecraft/minecraft/plugins/iZone"]
-    source  => "puppet://modules/minecraft/minecraft/home/minecraft/minecraft/plugins/iZone/vault.yml"
+    source  => "puppet:///modules/minecraft/minecraft/home/minecraft/minecraft/plugins/iZone/vault.yml"
   }
 
   file {  '/home/minecraft/minecraft/plugins/iZone.jar'
@@ -165,7 +165,7 @@ file {  '/home/minecraft/minecraft/plugins/iZone/saves/TreeFarm.yml'
     group   => 'minecraft',
     mode    => '0700',
     require => File["/home/minecraft/minecraft/plugins"]
-    source  => "puppet://modules/minecraft/minecraft/home/minecraft/minecraft/plugins/iZone.jar"
+    source  => "puppet:///modules/minecraft/minecraft/home/minecraft/minecraft/plugins/iZone.jar"
 
   file {  '/home/minecraft/minecraft/plugins/MobPlates'
     ensure  => directory,
@@ -173,7 +173,7 @@ file {  '/home/minecraft/minecraft/plugins/iZone/saves/TreeFarm.yml'
     group   => 'minecrarft',
     mode    => '0711', 
     require => File["/home/minecraft/minecraft/plugins']
-    source  => "puppet://modules/minecraft/minecraft/home/minecraft/minecraft/plugins/MobPlates"
+    source  => "puppet:///modules/minecraft/minecraft/home/minecraft/minecraft/plugins/MobPlates"
   }
 
   file {  '/home/minecraft/minecraft/plugins/MobPlates/config.yml'
@@ -182,7 +182,7 @@ file {  '/home/minecraft/minecraft/plugins/iZone/saves/TreeFarm.yml'
     group   => 'minecraft',
     mode    => '0600',
     require => File["/home/minecraft/minecraft/plugins/MobPlates"]
-    source  => "puppet://modules/minecraft/minecraft/home/minecraft/minecraft/plugins/MobPlates/confg.yml"
+    source  => "puppet:///modules/minecraft/minecraft/home/minecraft/minecraft/plugins/MobPlates/confg.yml"
   }
 
   file {  '/home/minecraft/minecraft/plugins/MobPlates/MobPlates.jar'
@@ -191,7 +191,7 @@ file {  '/home/minecraft/minecraft/plugins/iZone/saves/TreeFarm.yml'
     group   => 'minecraft',
     mode    => '0600',
     require => File["/home/minecraft/minecraft/plugins/MobPlates"]
-    source  => "puppet://modules/minecraft/minecraft/home/minecraft/minecraft/plugins/MobPlates.jar"
+    source  => "puppet:///modules/minecraft/minecraft/home/minecraft/minecraft/plugins/MobPlates.jar"
   }
 
   file {  '/home/minecraft/minecraft/plugins/PluginMetrics'
@@ -200,7 +200,7 @@ file {  '/home/minecraft/minecraft/plugins/iZone/saves/TreeFarm.yml'
     group   => 'minecraft',
     mode    => '0711',
     require => File["/home/minecraft/minecraft/plugins"]
-    source  => "puppet://modules/minecraft/minecraft/home/minecraft/minecraft/plugins/PluginMetrics"
+    source  => "puppet:///modules/minecraft/minecraft/home/minecraft/minecraft/plugins/PluginMetrics"
   }
 
   file {  '/home/minecraft/minecraft/plugins/PluginMetrics/config.yml'
@@ -209,7 +209,7 @@ file {  '/home/minecraft/minecraft/plugins/iZone/saves/TreeFarm.yml'
     group   => 'minecraft',
     mode    => '0600', 
     require => File["/home/minecraft/minecraft/plugins/PluginMetreics"]
-    source  => "puppet://modules/minecraft/minecraft/home/minecraft/minecraft/plugins/PluginMetrics/config.yml"
+    source  => "puppet:///modules/minecraft/minecraft/home/minecraft/minecraft/plugins/PluginMetrics/config.yml"
   }
 
   file {  '/home/minecraft/minecraft/plugins/Vault.jar'
@@ -218,6 +218,6 @@ file {  '/home/minecraft/minecraft/plugins/iZone/saves/TreeFarm.yml'
     group   => 'minecraft',
     mode    => '0600,' 
     require => File["/home/minecraft/minecraft/plugins"]
-    source  => "puppet://modules/minecraft/minecraft/home/minecraft/minecraft/plugins/Vault.jar"
+    source  => "puppet:///modules/minecraft/minecraft/home/minecraft/minecraft/plugins/Vault.jar"
 
   }
