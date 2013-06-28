@@ -1,6 +1,6 @@
 class minecraft::install { 
 
-  file {  'home/minecraft/minecraft/plugins':
+  file {  '/home/minecraft/minecraft/plugins':
     ensure => directory,
     owner  => 'minecraft',
     group  => 'minecraft',
