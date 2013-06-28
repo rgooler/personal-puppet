@@ -4,7 +4,7 @@ class minecraft::install {
     ensure => directory,
     owner  => 'minecraft',
     group  => 'minecraft',
-    mode   => '0600'
+    mode   => '0600',
     source => "puppet:///modules/minecraft/home/minecraft/minecraft/plugins",
   }
 
