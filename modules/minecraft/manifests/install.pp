@@ -219,7 +219,7 @@ file {  '/home/minecraft/minecraft/plugins/iZone/saves/TreeFarm.yml':
     owner   => 'minecraft',
     group   => 'minecrarft',
     mode    => '0711', 
-    require => File["/home/minecraft/minecraft/plugins'],
+    require => File["/home/minecraft/minecraft/plugins"],
     source  => "puppet:///modules/minecraft/minecraft/home/minecraft/minecraft/plugins/MobPlates",
   }
 
