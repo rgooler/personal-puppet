@@ -1,0 +1,25 @@
+border1:
+  x: 85
+  y: 62
+  z: 48
+world: Asgarde
+border2:
+  x: 104
+  y: 66
+  z: 75
+creation-date: 1358936182957
+flag:
+  protection: true
+  animal: true
+  welcome: true
+  farewell: true
+  interact: true
+  monster: true
+  fire: true
+  explosion: true
+  creeper: true
+allowed:
+- o:Claem
+- Jinxy
+- Jippen
+welcome: Chests sorted and moved to Guard Tower ~Jippen

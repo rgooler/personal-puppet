@@ -1,0 +1,24 @@
+border1:
+  x: 85
+  y: 62
+  z: 54
+world: Asgarde
+border2:
+  x: 105
+  y: 67
+  z: 65
+creation-date: 1358840133393
+flag:
+  protection: true
+  animal: false
+  welcome: true
+  farewell: true
+  interact: true
+  fire: true
+  creeper: true
+  explosion: true
+  monster: true
+allowed:
+- o:Claem
+- Jinxy
+- Jippen

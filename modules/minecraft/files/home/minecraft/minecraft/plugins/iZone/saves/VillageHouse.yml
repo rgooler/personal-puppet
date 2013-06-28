@@ -1,0 +1,22 @@
+border1:
+  x: 90
+  y: 61
+  z: 80
+world: Asgarde
+border2:
+  x: 99
+  y: 66
+  z: 89
+creation-date: 1359355787252
+flag:
+  protection: true
+  animal: true
+  welcome: true
+  farewell: true
+  interact: true
+  monster: true
+  fire: true
+  creeper: true
+  explosion: true
+allowed:
+- o:Claem
