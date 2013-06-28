@@ -62,12 +62,12 @@ class minecraft::install {
     source => "puppet:///modules/minecraft/home/minecraft/minecraft/plugins/DeathBukkit",
   }
 
-  file {  '/home/minecraft/minecraft/plugins/Deathbukkit/config.yml':
+  file {  '/home/minecraft/minecraft/plugins/DeathBukkit/config.yml':
     ensure  => 'file',
     owner   => 'minecraft',
     group   => 'minecraft',
     mode    => '0600',
-    require => File["/home/minecraft/minecraft/plugins/Deathbukkit"],
+    require => File["/home/minecraft/minecraft/plugins/DeathBukkit"],
     source  => "puppet:///modules/minecraft/home/minecraft/minecraft/plugins/DeathBukkit/config.yml",
   }
 
