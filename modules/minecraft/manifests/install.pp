@@ -140,7 +140,8 @@ class minecraft::install {
     mode    => '0600',
     require => File["/home/minecraft/minecraft/plugins/iZone/saves"],
     source  => "puppet:///modules/minecraft/minecraft/home/minecraft/minecraft/plugins/iZone/saves/JungleHouse.yml",
-
+  }
+  
   file {  '/home/minecraft/minecraft/plugins/iZone/saves/MineShack.yml':
     ensure  => file,
     owner   => 'minecraft',
