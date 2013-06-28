@@ -263,7 +263,7 @@ file {  '/home/minecraft/minecraft/plugins/iZone/saves/TreeFarm.yml':
     ensure  => file,
     owner   => 'minecraft', 
     group   => 'minecraft',
-    mode    => '0600,' 
+    mode    => '0600', 
     require => File["/home/minecraft/minecraft/plugins"],
     source  => "puppet:///modules/minecraft/minecraft/home/minecraft/minecraft/plugins/Vault.jar",
   }
