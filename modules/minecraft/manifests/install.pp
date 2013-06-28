@@ -212,6 +212,7 @@ file {  '/home/minecraft/minecraft/plugins/iZone/saves/TreeFarm.yml':
     mode    => '0700',
     require => File["/home/minecraft/minecraft/plugins"],
     source  => "puppet:///modules/minecraft/minecraft/home/minecraft/minecraft/plugins/iZone.jar",
+  }
 
   file {  '/home/minecraft/minecraft/plugins/MobPlates':
     ensure  => directory,
@@ -265,7 +266,6 @@ file {  '/home/minecraft/minecraft/plugins/iZone/saves/TreeFarm.yml':
     mode    => '0600,' 
     require => File["/home/minecraft/minecraft/plugins"],
     source  => "puppet:///modules/minecraft/minecraft/home/minecraft/minecraft/plugins/Vault.jar",
-
   }
 
 }
