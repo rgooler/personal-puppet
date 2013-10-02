@@ -17,3 +17,8 @@ node 'NFS' inherits default {
   #include 'phpvirtualbox'
   include 'minecraft'
 }
+
+node 'uk.thisstuffismine.com' inherits default {
+  include 'nginx'
+  include 'mysql'
+}
