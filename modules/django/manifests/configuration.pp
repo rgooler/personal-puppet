@@ -1,0 +1,3 @@
+class django::configuration { 
+
+}
