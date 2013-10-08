@@ -20,6 +20,7 @@ node 'NFS' inherits default {
 
 node 'uk.thisstuffismine.com' inherits default {
   include 'nginx'
+  include 'nginx::php'
   include 'mysql'
   include 'django'
 }
