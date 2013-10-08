@@ -29,4 +29,11 @@ class nginx::install {
     subscribe   => File['/etc/security/limits.d/nginx.nofile.conf'],
   }
 
+  file { '/var/www':
+    ensure  => directory,
+    owner   => 'www-data',
+    group   => 'www-data',
+    require => Package['nginx'],
+  }
+
 }
