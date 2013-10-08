@@ -1,0 +1,3 @@
+class imagemagick::services { 
+
+}
