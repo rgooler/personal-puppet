@@ -24,4 +24,5 @@ node 'uk.thisstuffismine.com' inherits default {
   include 'mysql'
   include 'django'
   include 'imagemagick'
+  include 'postfix'
 }
