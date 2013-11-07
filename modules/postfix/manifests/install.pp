@@ -4,4 +4,9 @@ class postfix::install {
     ensure => latest,
   }
 
+  package { 'postgrey':
+    ensure  => latest,
+    require => Package['postfix'],
+  }
+
 }
