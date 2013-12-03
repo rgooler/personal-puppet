@@ -3,7 +3,7 @@ class users::users::git{
 
   user_acct {'git':
     fullname    => "git",
-    uid         => 1001,
+    uid         => 1002,
     recursehome => true,
   }
 
