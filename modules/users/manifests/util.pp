@@ -1,4 +1,4 @@
-define user_acct($fullname, $uid, $groups=[], $recursehome=false){
+define user_acct($fullname, $uid, $groups=[], $recursehome=false, $shell='/bin/bash'){
   group { $name:
     ensure => present,
     gid    => $uid,
@@ -9,7 +9,7 @@ define user_acct($fullname, $uid, $groups=[], $recursehome=false){
     gid        => $name,
     #home       => "/home/${name}",
     #managehome => true,
-    shell      => '/bin/bash',
+    shell      => $shell,
     uid        => $uid,
     require    => Group[$name],
   }

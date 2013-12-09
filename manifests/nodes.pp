@@ -22,7 +22,6 @@ node 'uk.thisstuffismine.com' inherits default {
   include 'nginx'
   include 'nginx::php'
   include 'mysql'
-  include 'django'
   include 'imagemagick'
   include 'postfix'
   include 'git_server'
