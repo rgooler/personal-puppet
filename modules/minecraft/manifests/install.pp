@@ -255,7 +255,7 @@ file {  '/home/minecraft/minecraft/plugins/iZone/saves/TreeFarm.yml':
     owner   => 'minecraft',
     group   => 'minecraft',
     mode    => '0600', 
-    require => File["/home/minecraft/minecraft/plugins/PluginMetreics"],
+    require => File["/home/minecraft/minecraft/plugins/PluginMetrics"],
     source  => "puppet:///modules/minecraft/minecraft/home/minecraft/minecraft/plugins/PluginMetrics/config.yml",
   }
 
