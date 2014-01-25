@@ -58,7 +58,7 @@ class minecraft::install {
     owner   => 'minecraft',
     group   => 'minecraft',
     mode    => '0711',
-    require => File["home/minecraft/minecraft/plugins"],
+    require => File["/home/minecraft/minecraft/plugins"],
     source => "puppet:///modules/minecraft/home/minecraft/minecraft/plugins/DeathBukkit",
   }
 
