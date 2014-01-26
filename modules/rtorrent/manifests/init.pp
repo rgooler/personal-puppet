@@ -6,7 +6,7 @@ class rtorrent{
   include 'rtorrent::services'
 
   Class['rtorrent::user'] -> Class['rtorrent::install']
-  Class['rtorrent::install'] -> Class['rtorrent::config']
+  Class['rtorrent::install'] -> Class['rtorrent::configuration']
   Class['rtorrent::configuration'] -> Class['rtorrent::services']
 
 }
