@@ -17,4 +17,5 @@ class rtorrent::user{
     mode    => '0775',
     require => [ User['rtorrent'],Group['rtorrent'] ],
   }
+
 }

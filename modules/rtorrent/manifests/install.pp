@@ -16,4 +16,24 @@ class rtorrent::install{
     group  => 'rtorrent',
     mode   => '0775',
   }
+
+  # Create manditory directories
+  file {'/home/rtorrent/downloads':
+    ensure  => directory,
+    require => User['rtorrent'],
+    mode    => 0755,
+    recurse => false,
+    owner  => 'rtorrent',
+    group  => 'rtorrent',
+  }
+
+  file {'/home/rtorrent/.session':
+    ensure  => directory,
+    require => User['rtorrent'],
+    mode    => 0755,
+    recurse => false,
+    owner  => 'rtorrent',
+    group  => 'rtorrent',
+  }
+
 }
