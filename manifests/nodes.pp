@@ -12,6 +12,7 @@ node /^tvmobili.*/ inherits default {
 
 node 'NFS' inherits default {
   include 'nginx'
+  include 'rtorrent'
   #include 'icinga'
   #include 'virtualbox'
   #include 'phpvirtualbox'
