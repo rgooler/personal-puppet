@@ -11,11 +11,11 @@ node /^tvmobili.*/ inherits default {
 }
 
 node 'NFS' inherits default {
-  #include 'nginx'
+  include 'nginx'
   #include 'icinga'
   #include 'virtualbox'
   #include 'phpvirtualbox'
-  include 'minecraft'
+  #include 'minecraft' # Currently busted
 }
 
 node 'uk.thisstuffismine.com' inherits default {
