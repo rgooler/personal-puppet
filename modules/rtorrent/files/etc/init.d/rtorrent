@@ -46,7 +46,7 @@
 user="rtorrent"
 
 # system user to run as # not implemented, see d_start for beginning implementation
-# group=$(id -ng "$user")
+group=$(id -ng "$user")
 
 # the full path to the filename where you store your rtorrent configuration
 # must keep parentheses around the entire statement, quotations around each config file
@@ -119,11 +119,11 @@ d_start() {
   su -c "screen -S "${srnname}" -X screen rtorrent ${options} 2>&1 1>/dev/null" ${user} | tee -a "$logfile" >&2
   # this works for the screen command, but starting rtorrent below adopts screen session gid
   # even if it is not the screen session we started (e.g. running under an undesirable gid
-  #su -c "screen -ls | grep -sq "\.${srnname}[[:space:]]" " ${user} || su -c "sg \"$group\" -c \"screen -fn -dm -S ${srnname} 2>&1 1>/dev/null\"" ${user} | tee -a "$logfile" >&2
-  for (( i=0 ; i < ${#options[@]} ; i++ )) ;  do
-    sleep 3
-    su -c "screen -S "${srnname}" -X screen rtorrent ${options[i]} 2>&1 1>/dev/null" ${user} | tee -a "$logfile" >&2
-  done
+  su -c "screen -ls | grep -sq "\.${srnname}[[:space:]]" " ${user} || su -c "sg \"$group\" -c \"screen -fn -dm -S ${srnname} 2>&1 1>/dev/null\"" ${user} | tee -a "$logfile" >&2
+  #for (( i=0 ; i < ${#options[@]} ; i++ )) ;  do
+  #  sleep 3
+  #  su -c "screen -S "${srnname}" -X screen rtorrent ${options[i]} 2>&1 1>/dev/null" ${user} | tee -a "$logfile" >&2
+  #done
 }
 
 d_stop() {
