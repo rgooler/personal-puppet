@@ -23,8 +23,22 @@ session = /home/rtorrent/.session
 
 # Watch a directory for new torrents, and stop those that have been
 # deleted.
-#schedule = watch_directory,5,5,load_start=./watch/*.torrent
-#schedule = untied_directory,5,5,stop_untied=
+schedule = watch_directory,5,5,load_start=/home/rtorrent/watch/Other/*.torrent,d.set_directory=/media/NAS/shared/Downloads/Other/
+schedule = watch_directory,5,5,load_start=/home/rtorrent/watch/Books/*.torrent,d.set_directory=/media/NAS/shared/Downloads/Books/
+schedule = watch_directory,5,5,load_start=/home/rtorrent/watch/Comics/*.torrent,d.set_directory=/media/NAS/shared/Downloads/Comics/
+schedule = watch_directory,5,5,load_start=/home/rtorrent/watch/Games/*.torrent,d.set_directory=/media/NAS/shared/Downloads/Games/
+schedule = watch_directory,5,5,load_start=/home/rtorrent/watch/Music/*.torrent,d.set_directory=/media/NAS/shared/Downloads/Music/
+schedule = watch_directory,5,5,load_start=/home/rtorrent/watch/Videos/*.torrent,d.set_directory=/media/NAS/shared/Downloads/Videos/
+schedule = watch_directory,5,5,load_start=/home/jippen/Downloads/torrent_files/*.torrent,d.set_directory=/home/jippen/Downloads/torrents/
+
+# Remove deleted torrents
+schedule = untied_directory,5,5,stop_untied=
+
+# Create symlinks to show progress
+on_start    = link1,"create_link=tied,,.started"
+on_stop     = link1,"delete_link=tied,,.started"
+on_finished = link1,"create_link=tied,,.finished"
+on_erase    = link1,"delete_link=tied,,.finished"
 
 # Close torrents when diskspace is low.
 schedule = low_diskspace,5,60,close_low_diskspace=100M
@@ -74,6 +88,10 @@ dht_port = 6881
 # Enable peer exchange (for torrents not marked private)
 #
 peer_exchange = yes
+
+# Enable XML RPC
+encoding_list = UTF-8
+scgi_port = localhost:5000
 
 ###########################################################################
 # Do not modify the following parameters unless you know what you're doing.
