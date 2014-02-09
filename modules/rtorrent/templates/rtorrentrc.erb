@@ -20,15 +20,24 @@ directory = /home/rtorrent/downloads
 session = /home/rtorrent/.session
 schedule = session_save,240,300,session_save=
 
-# Watch a directory for new torrents, and stop those that have been
-# deleted.
-schedule = watch_directory,5,5,"load_start=/home/rtorrent/watch/Other/*.torrent,d.set_directory=/media/NAS/shared/Downloads/Other/"
-schedule = watch_directory,5,5,"load_start=/home/rtorrent/watch/Books/*.torrent,d.set_directory=/media/NAS/shared/Downloads/Books/"
-schedule = watch_directory,5,5,"load_start=/home/rtorrent/watch/Comics/*.torrent,d.set_directory=/media/NAS/shared/Downloads/Comics/"
-schedule = watch_directory,5,5,"load_start=/home/rtorrent/watch/Games/*.torrent,d.set_directory=/media/NAS/shared/Downloads/Games/"
-schedule = watch_directory,5,5,"load_start=/home/rtorrent/watch/Music/*.torrent,d.set_directory=/media/NAS/shared/Downloads/Music/"
-schedule = watch_directory,5,5,"load_start=/home/rtorrent/watch/Videos/*.torrent,d.set_directory=/media/NAS/shared/Downloads/Videos/"
-schedule = watch_directory,5,5,"load_start=/home/jippen/Downloads/torrent_files/*.torrent,d.set_directory=/home/jippen/Downloads/torrents/"
+# Logging
+log.open_file = "rtorrent", /var/log/rtorrent/rtorrent.log
+log.add_output = "warn", "rtorrent"
+
+###############
+# Start new torrents automatically
+#
+# custom_1 = Label
+# custom_2 = Finished Directory
+
+<% $tags = ['Other', 'Books', 'Comics', 'Games', 'Music', 'Videos'] -%>
+<% @tags.each do |tag| -%>
+schedule = watch_directory,5,5,"load_start=/home/rtorrent/watch/<%= tag %>/*.torrent,d.set_directory=/media/NAS/shared/Downloads/Incoming/<%= tag %>/,d.set_custom1=<%= tag %>,d.set_custom2=/media/NAS/shared/Downloads/Complete/<%= tag %>/"
+<% end -%>
+schedule = watch_directory,5,5,"load_start=/home/jippen/Downloads/torrent_files/*.torrent,d.set_directory=/home/jippen/Downloads/torrents/incoming/,d.set_custom1=jippen,d.set_custom2=/home/jippen/Downloads/torrents/complete/"
+
+#Move torrents when complete
+system.method.set_key = event.download.finished,move_complete,"d.set_directory=$d.get_custom2=;execute=mv,-u,$d.get_base_path=,$d.get_custom2="
 
 # Remove deleted torrents
 schedule = tied_directory,1,30,start_tied=
