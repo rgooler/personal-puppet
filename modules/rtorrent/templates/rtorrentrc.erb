@@ -32,7 +32,7 @@ schedule = session_save,240,300,session_save=
 
 <% $tags = ['Other', 'Books', 'Comics', 'Games', 'Music', 'Videos'] -%>
 <% $tags.each do |tag| -%>
-schedule = watch_directory,5,5,"load_start=/home/rtorrent/watch/<%= tag %>/*.torrent,d.set_directory=/media/NAS/shared/Downloads/Incoming/<%= tag %>/,d.set_custom1=<%= tag %>,d.set_custom2=/media/NAS/shared/Downloads/Complete/<%= tag %>/"
+schedule = watch_directory,5,5,"load_start=/media/NAS/Shared/Downloads/TorrentFiles/<%= tag %>/*.torrent,d.set_directory=/media/NAS/Shared/Downloads/Incoming/<%= tag %>/,d.set_custom1=<%= tag %>,d.set_custom2=/media/NAS/Shared/Downloads/Complete/<%= tag %>/"
 <% end -%>
 schedule = watch_directory,5,5,"load_start=/home/jippen/Downloads/torrent_files/*.torrent,d.set_directory=/home/jippen/Downloads/torrents/incoming/,d.set_custom1=jippen,d.set_custom2=/home/jippen/Downloads/torrents/complete/"
 
