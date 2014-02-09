@@ -4,6 +4,7 @@ class deluge {
   include 'deluge::services'
   include 'deluge::monitoring'
   include 'deluge::user'
+  include 'deluge::repo'
 
   Class['deluge::repo'] -> Class['deluge::install']
   Class['deluge::user'] -> Class['deluge::install']
