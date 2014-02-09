@@ -71,8 +71,8 @@ check_hash = yes
 use_udp_trackers = yes
 
 # Alternative calls to bind and ip that should handle dynamic ip's.
-schedule = ip_tick,0,1800,ip=rakshasa
-schedule = bind_tick,0,1800,bind=rakshasa
+#schedule = ip_tick,0,1800,ip=rakshasa
+#schedule = bind_tick,0,1800,bind=rakshasa
 
 # Encryption options, set to none (default) or any combination of the following:
 # allow_incoming, try_outgoing, require, require_RC4, enable_retry, prefer_plaintext
@@ -100,7 +100,8 @@ peer_exchange = yes
 
 # Enable XML RPC
 encoding_list = UTF-8
-scgi_port = localhost:5000
+#scgi_port = localhost:5000
+scgi_local = /home/rtorrent/scgi
 
 ###########################################################################
 # Do not modify the following parameters unless you know what you're doing.
