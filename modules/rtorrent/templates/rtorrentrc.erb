@@ -16,10 +16,9 @@ upload_rate = 0
 # Default directory to save the downloaded torrents.
 directory = /home/rtorrent/downloads
 
-# Default session directory. Make sure you don't run multiple instance
-# of rtorrent using the same session directory. Perhaps using a
-# relative path?
+# Save session data
 session = /home/rtorrent/.session
+schedule = session_save,240,300,session_save=
 
 # Watch a directory for new torrents, and stop those that have been
 # deleted.
