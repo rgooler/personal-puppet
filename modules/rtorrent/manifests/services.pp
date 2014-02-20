@@ -1,7 +1,8 @@
 class rtorrent::services {
 
   service { 'rtorrent':
-    ensure => running,
+    #ensure => running,
+    enabled => true,
   }
 
 }
