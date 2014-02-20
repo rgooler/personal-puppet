@@ -1,0 +1,3 @@
+class deluge::monitoring { 
+
+}
