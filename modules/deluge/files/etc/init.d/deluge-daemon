@@ -102,6 +102,16 @@ do_stop()
    [ "$RETVAL1" = "0" -a "$RETVAL2" = "0" ] && return 0 || return 1
 }
 
+do_status() {
+  ISRUNNING=$(ps aux |fgrep -v grep|fgrep $DAEMON1)
+  if [[ $? -eq 0 ]]; then
+    return 1
+  else
+    return 0
+  fi
+
+}
+
 case "$1" in
   start)
    [ "$VERBOSE" != no ] && log_daemon_msg "Starting $DESC" "$NAME1"
@@ -119,6 +129,9 @@ case "$1" in
       2) [ "$VERBOSE" != no ] && log_end_msg 1 ;;
    esac
    ;;
+  status)
+   do_status
+   ;; 
   restart|force-reload)
    log_daemon_msg "Restarting $DESC" "$NAME1"
    do_stop
@@ -138,7 +151,7 @@ case "$1" in
    esac
    ;;
   *)
-   echo "Usage: $SCRIPTNAME {start|stop|restart|force-reload}" >&2
+   echo "Usage: $SCRIPTNAME {start|stop|restart|force-reload|status}" >&2
    exit 3
    ;;
 esac
