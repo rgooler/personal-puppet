@@ -104,7 +104,7 @@ do_stop()
 
 do_status() {
   ISRUNNING=$(ps aux |fgrep -v grep|fgrep $DAEMON1)
-  if [[ $? -eq 0 ]]; then
+  if [ $? -eq 0 ]; then
     return 1
   else
     return 0
