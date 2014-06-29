@@ -15,7 +15,7 @@ class squid::adblock {
    cron_minute => '0',
    cron_hour   => '5',
    cron_dow    => '0',
-   cmd         => "${easylist}; service squid3 restart",
+   path        => "${easylist}; service squid3 restart",
  }
 
  exec { $easylist : 
