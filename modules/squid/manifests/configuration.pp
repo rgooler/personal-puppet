@@ -1,7 +1,7 @@
 class squid::configuration { 
 
   file { '/etc/squid/squid3.conf':
-    ensure => file
+    ensure => file,
     mode   => 0644,
     user   => 'root',
     group  => 'root',
