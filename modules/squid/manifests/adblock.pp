@@ -12,15 +12,16 @@ class squid::adblock {
     notify => Class['squid::services'],
  }
 
+ $easylist = 'curl -q https://easylist-downloads.adblockplus.org/easylist_noadult.txt 2>/dev/null | sed -f /etc/squid3/lists/easylist2squid.sed /etc/squid3/lists/easylist.txt'
 
  better_cron { 'squid3_update_easylist':
    cron_minute => '0',
    cron_hour   => '5',
    cron_dow    => '0',
-   path        => '/usr/local/bin/easylist2squid.sh && service squid3 restart',
+   path        => "${easylist} && service squid3 restart",
  }
 
- exec { '/bin/bash /usr/local/bin/easylist2squid.sh' : 
+ exec { $easylist : 
   creates   => '/etc/squid3/lists/easylist.txt',
   require   => [ Class['squid::configuration'], File['/usr/local/bin/easylist2squid.sh'], ],
   logoutput => true,
