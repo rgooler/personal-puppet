@@ -14,6 +14,7 @@ class squid::configuration {
 
   file { '/etc/squid3/lists':
     ensure => directory,
+    purge  => false,
     source => 'puppet:///modules/squid/etc/squid3/lists',
  }
 
