@@ -1,11 +1,5 @@
 class squid::adblock { 
 
-  file { '/usr/local/bin/easylist2squid.sh':
-    ensure => file,
-    mode   => 0755,
-    source => 'puppet:///modules/squid/usr/local/bin/easylist2squid.sh',
-  }
-
   file { '/etc/squid3/squid.d/adblock.conf':
     ensure => file,
     source => 'puppet:///modules/squid/etc/squid3/squid.d/adblock.conf',
