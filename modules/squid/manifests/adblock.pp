@@ -20,7 +20,7 @@ class squid::adblock {
    path        => '/usr/local/bin/easylist2squid.sh && service squid3 restart',
  }
 
- exec { '/usr/local/bin/easylist2squid.sh' : 
+ exec { '/bin/bash /usr/local/bin/easylist2squid.sh' : 
   unless  => '/etc/squid3/lists/easylist.txt',
   require => Class['squid::configuration'],
  }
