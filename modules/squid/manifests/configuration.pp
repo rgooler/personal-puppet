@@ -12,4 +12,9 @@ class squid::configuration {
     ensure => directory,
  }
 
+  file { '/etc/squid3/lists':
+    ensure => directory,
+    source => 'puppet:///modules/squid/etc/squid3/lists',
+ }
+
 }
