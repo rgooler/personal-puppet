@@ -1,0 +1,3 @@
+class squid::monitoring { 
+
+}

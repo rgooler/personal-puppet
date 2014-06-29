@@ -1,4 +1,4 @@
-class squid-adblock::install { 
+class squid::install { 
 
   package { 'squid':
     ensure => latest,

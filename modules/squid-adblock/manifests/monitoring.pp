@@ -1,3 +1,0 @@
-class squid-adblock::monitoring { 
-
-}
