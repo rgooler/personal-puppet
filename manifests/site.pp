@@ -25,7 +25,7 @@ node 'NFS' inherits default {
   #include 'virtualbox'
   #include 'phpvirtualbox'
   #include 'minecraft' # Currently busted
-  include 'squid-adproxy'
+  include 'squid-adblock'
 }
 
 node 'uk.thisstuffismine.com' inherits default {
