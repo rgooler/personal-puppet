@@ -9,7 +9,7 @@ class squid::adblock {
  #$easylist = 'curl -q https://easylist-downloads.adblockplus.org/easylist.txt 2>/dev/null | sed -f /etc/squid3/lists/easylist2squid.sed >/etc/squid3/lists/easylist.txt'
  
  # I prefer the noadult filter, so here's an alternate link
- $easylist = 'curl -q https://easylist-downloads.adblockplus.org/easylist_noadult.txt 2>/dev/null | sed -f /etc/squid3/lists/easylist2squid.sed >/etc/squid3/lists/easylist.txt'
+ $easylist = 'curl -q https://easylist-downloads.adblockplus.org/easylist_noadult.txt 2>/dev/null | sed -f /etc/squid3/lists/easylist2squid.sed > /etc/squid3/lists/easylist.txt'
 
  better_cron { 'squid3_update_easylist':
    cron_minute => '0',
