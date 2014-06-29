@@ -20,6 +20,7 @@ class squid::adblock {
 
  exec { $easylist : 
   unless => '/etc/squid3/lists/easylist.txt',
+  after  => Class['adblock::configuration'],
  }
 
 
