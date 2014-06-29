@@ -17,7 +17,7 @@ node /^tvmobili.*/ inherits default {
   include 'tvmobili'
 }
 
-node 'NFS' inherits default {
+node 'nfs.goolerhome.com','NFS' inherits default {
   include 'nginx'
   #include 'rtorrent'
   include 'deluge'
