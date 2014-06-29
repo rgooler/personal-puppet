@@ -21,8 +21,9 @@ class squid::adblock {
  }
 
  exec { '/bin/bash /usr/local/bin/easylist2squid.sh' : 
-  unless  => '/etc/squid3/lists/easylist.txt',
-  require => Class['squid::configuration'],
+  creates   => '/etc/squid3/lists/easylist.txt',
+  require   => [ Class['squid::configuration'], File['/usr/local/bin/easylist2squid.sh'], ],
+  logoutput => true,
  }
 
 
