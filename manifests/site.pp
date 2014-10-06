@@ -27,6 +27,7 @@ node 'nfs.goolerhome.com','NFS' inherits default {
   #include 'minecraft' # Currently busted
   include 'squid'
   include 'squid::adblock'
+  include 'nfs'
 }
 
 node 'uk.thisstuffismine.com' inherits default {
